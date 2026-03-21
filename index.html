@@ -194,6 +194,20 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1714;color:white;padding:9px 20px;border-radius:24px;font-size:13px;font-weight:700;z-index:999;transition:transform .3s;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
+/* ── AUTOCOMPLETE ── */
+.ac-wrap{position:relative;}
+.ac-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);box-shadow:0 4px 20px rgba(0,0,0,.1);z-index:500;max-height:200px;overflow-y:auto;display:none;}
+.ac-dropdown.open{display:block;}
+.ac-item{padding:8px 12px;font-size:13px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .1s;}
+.ac-item:hover,.ac-item.focused{background:var(--bg);}
+.ac-item .ac-icon{font-size:10px;opacity:.4;flex-shrink:0;}
+.ac-item mark{background:#ffeaa7;border-radius:2px;padding:0 2px;}
+.ac-empty{padding:8px 12px;font-size:12px;color:var(--text3);font-style:italic;}
+.ac-new-hint{padding:6px 12px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);background:var(--surface2);}
+.ac-new-hint span{font-weight:700;color:var(--text2);}
+.pool-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:1px 6px;border-radius:8px;background:var(--bg);color:var(--text3);font-family:'DM Mono',monospace;border:1px solid var(--border);margin-left:auto;flex-shrink:0;}
+.pool-stats{font-size:11px;color:var(--text3);margin-top:4px;}
+
 @media(max-width:480px){
   .tab-btn{padding:12px 10px;font-size:13px;}
   .tab-btn .lbl{display:none;}
@@ -315,26 +329,47 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         <input id="m-title" type="text" placeholder="Giriş başlığı…">
       </div>
       <div class="mfield mfield-tanim">
-        <label>Tanım</label>
+        <label>Tanım <span class="pool-badge" id="pool-badge-tanim"></span></label>
         <div id="items-tanim"></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <input id="m-tanim-new" type="text" placeholder="Tanım maddesi ekle… (Enter)" onkeydown="if(event.key==='Enter'){addModalItem('tanim');this.focus()}">
+          <div class="ac-wrap" style="flex:1">
+            <input id="m-tanim-new" type="text" placeholder="Tanım maddesi ekle… (Enter)" autocomplete="off"
+              oninput="acInput('tanim')"
+              onkeydown="acKeydown(event,'tanim')"
+              onfocus="acInput('tanim')"
+              onblur="acBlur('tanim')">
+            <div class="ac-dropdown" id="ac-tanim"></div>
+          </div>
           <button onclick="addModalItem('tanim')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px">+</button>
         </div>
       </div>
       <div class="mfield mfield-sorgu">
-        <label>Sorgu</label>
+        <label>Sorgu <span class="pool-badge" id="pool-badge-sorgu"></span></label>
         <div id="items-sorgu"></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <input id="m-sorgu-new" type="text" placeholder="Sorgu maddesi ekle… (Enter)" onkeydown="if(event.key==='Enter'){addModalItem('sorgu');this.focus()}">
+          <div class="ac-wrap" style="flex:1">
+            <input id="m-sorgu-new" type="text" placeholder="Sorgu maddesi ekle… (Enter)" autocomplete="off"
+              oninput="acInput('sorgu')"
+              onkeydown="acKeydown(event,'sorgu')"
+              onfocus="acInput('sorgu')"
+              onblur="acBlur('sorgu')">
+            <div class="ac-dropdown" id="ac-sorgu"></div>
+          </div>
           <button onclick="addModalItem('sorgu')" style="background:none;border:none;cursor:pointer;color:#8e44ad;font-size:20px">+</button>
         </div>
       </div>
       <div class="mfield mfield-tetkik">
-        <label>Tetkik</label>
+        <label>Tetkik <span class="pool-badge" id="pool-badge-tetkik"></span></label>
         <div id="items-tetkik"></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <input id="m-tetkik-new" type="text" placeholder="Tetkik maddesi ekle… (Enter)" onkeydown="if(event.key==='Enter'){addModalItem('tetkik');this.focus()}">
+          <div class="ac-wrap" style="flex:1">
+            <input id="m-tetkik-new" type="text" placeholder="Tetkik maddesi ekle… (Enter)" autocomplete="off"
+              oninput="acInput('tetkik')"
+              onkeydown="acKeydown(event,'tetkik')"
+              onfocus="acInput('tetkik')"
+              onblur="acBlur('tetkik')">
+            <div class="ac-dropdown" id="ac-tetkik"></div>
+          </div>
           <button onclick="addModalItem('tetkik')" style="background:none;border:none;cursor:pointer;color:#d35400;font-size:20px">+</button>
         </div>
       </div>
@@ -376,7 +411,39 @@ function loadLocal() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || emptyDb(); }
   catch { return emptyDb(); }
 }
-function emptyDb() { return { disease:[], finding:[], symptom:[] }; }
+function emptyDb() { return { disease:[], finding:[], symptom:[], pool:{ tanim:[], sorgu:[], tetkik:[] } }; }
+
+function ensurePool() {
+  if (!localDb.pool) localDb.pool = { tanim:[], sorgu:[], tetkik:[] };
+  FIELDS.forEach(function(f){ if (!Array.isArray(localDb.pool[f])) localDb.pool[f] = []; });
+}
+
+// Tüm kartlardan havuzu retroaktif olarak doldur (additive)
+function rebuildPoolFromEntries() {
+  ensurePool();
+  FIELDS.forEach(function(field) {
+    var existing = new Set(localDb.pool[field].map(function(x){ return x.toLowerCase(); }));
+    ['disease','finding','symptom'].forEach(function(type) {
+      (localDb[type]||[]).forEach(function(entry) {
+        (entry[field]||[]).forEach(function(item) {
+          if (item && !existing.has(item.toLowerCase())) {
+            localDb.pool[field].push(item);
+            existing.add(item.toLowerCase());
+          }
+        });
+      });
+    });
+  });
+}
+
+function addToPool(field, value) {
+  ensurePool();
+  var v = value.trim();
+  if (!v) return;
+  var exists = localDb.pool[field].some(function(x){ return x.toLowerCase() === v.toLowerCase(); });
+  if (!exists) localDb.pool[field].push(v);
+}
+
 function saveLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(localDb)); }
 
 // ── FIREBASE ──
@@ -423,7 +490,17 @@ async function syncFromFirebase() {
         const localOnly = (localDb[type]||[]).filter(e => !remoteIds.has(e.id));
         localDb[type] = [...(remote[type]||[]), ...localOnly];
       });
+      // Pool merge: remote pool öncelikli, local'dekiler eklenir
+      if (remote.pool) {
+        FIELDS.forEach(function(f) {
+          const merged = new Map();
+          (remote.pool[f]||[]).forEach(function(x){ merged.set(x.toLowerCase(), x); });
+          ((localDb.pool||{})[f]||[]).forEach(function(x){ if(!merged.has(x.toLowerCase())) merged.set(x.toLowerCase(), x); });
+          localDb.pool[f] = Array.from(merged.values());
+        });
+      }
     }
+    rebuildPoolFromEntries();
     await userDocRef().set(localDb);
     saveLocal();
   } catch(e) { console.error('Sync error:', e); }
@@ -476,7 +553,11 @@ function doSignOut() {
 }
 
 // ── SETTINGS ──
-function openSettings() { document.getElementById('settingsPanel').classList.add('open'); }
+function openSettings() {
+  document.getElementById('settingsPanel').classList.add('open');
+  rebuildPoolFromEntries();
+  renderPoolManager('');
+}
 function closeSettings() { document.getElementById('settingsPanel').classList.remove('open'); }
 
 // ── TAB ──
@@ -517,6 +598,7 @@ function openModal(type, entryId) {
   }
   document.getElementById('modalSaveBtn').className = 'btn-save ' + type;
   renderModalItems();
+  updatePoolBadges();
   document.getElementById('overlay').classList.add('open');
   setTimeout(function(){ document.getElementById('m-title').focus(); }, 100);
 }
@@ -526,13 +608,115 @@ function closeModal() {
   editingId = null;
 }
 
-function addModalItem(field) {
+function addModalItem(field, value) {
   const inp = document.getElementById('m-' + field + '-new');
-  const val = inp.value.trim();
+  const val = (value !== undefined ? value : inp.value).trim();
   if (!val) return;
+  if (modalItems[field].some(function(x){ return x.toLowerCase() === val.toLowerCase(); })) {
+    showToast('Bu madde zaten eklendi'); return;
+  }
   modalItems[field].push(val);
   inp.value = '';
+  acClose(field);
   renderModalItems();
+  updatePoolBadges();
+  inp.focus();
+}
+
+// ── AUTOCOMPLETE ──
+var acFocusIdx = { tanim:-1, sorgu:-1, tetkik:-1 };
+var acVisible = { tanim:false, sorgu:false, tetkik:false };
+
+function acGetSuggestions(field, query) {
+  ensurePool();
+  const pool = localDb.pool[field] || [];
+  const q = query.toLowerCase().trim();
+  const alreadyAdded = new Set(modalItems[field].map(function(x){ return x.toLowerCase(); }));
+  if (!q) {
+    // Boşken tüm havuzu göster (eklenmemişleri)
+    return pool.filter(function(x){ return !alreadyAdded.has(x.toLowerCase()); }).slice(0, 10);
+  }
+  return pool.filter(function(x){
+    return x.toLowerCase().includes(q) && !alreadyAdded.has(x.toLowerCase());
+  }).slice(0, 10);
+}
+
+function acInput(field) {
+  var inp = document.getElementById('m-' + field + '-new');
+  var q = inp.value.trim();
+  var suggestions = acGetSuggestions(field, q);
+  acFocusIdx[field] = -1;
+  renderAcDropdown(field, q, suggestions);
+}
+
+function renderAcDropdown(field, q, suggestions) {
+  var dd = document.getElementById('ac-' + field);
+  if (!dd) return;
+  if (!suggestions.length) {
+    dd.classList.remove('open');
+    acVisible[field] = false;
+    return;
+  }
+  var html = suggestions.map(function(s, i) {
+    var label = q ? s.replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : esc(s);
+    return '<div class="ac-item" id="ac-item-' + field + '-' + i + '" onmousedown="acSelect(event,\'' + field + '\',\'' + esc(s) + '\')">' +
+      '<span class="ac-icon">↩</span><span style="flex:1">' + label + '</span>' +
+      '</div>';
+  }).join('');
+  if (q) {
+    var alreadyInPool = (localDb.pool[field]||[]).some(function(x){ return x.toLowerCase() === q.toLowerCase(); });
+    if (!alreadyInPool) {
+      html += '<div class="ac-new-hint">Enter ile yeni madde ekle: <span>' + esc(q) + '</span></div>';
+    }
+  }
+  dd.innerHTML = html;
+  dd.classList.add('open');
+  acVisible[field] = true;
+}
+
+function acSelect(e, field, value) {
+  e.preventDefault();
+  addModalItem(field, value);
+}
+
+function acClose(field) {
+  var dd = document.getElementById('ac-' + field);
+  if (dd) dd.classList.remove('open');
+  acVisible[field] = false;
+  acFocusIdx[field] = -1;
+}
+
+function acBlur(field) {
+  setTimeout(function(){ acClose(field); }, 150);
+}
+
+function acKeydown(e, field) {
+  var dd = document.getElementById('ac-' + field);
+  var items = dd ? dd.querySelectorAll('.ac-item') : [];
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    acFocusIdx[field] = Math.min(acFocusIdx[field] + 1, items.length - 1);
+    acHighlight(field, items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    acFocusIdx[field] = Math.max(acFocusIdx[field] - 1, -1);
+    acHighlight(field, items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (acFocusIdx[field] >= 0 && items[acFocusIdx[field]]) {
+      items[acFocusIdx[field]].dispatchEvent(new MouseEvent('mousedown'));
+    } else {
+      addModalItem(field);
+    }
+  } else if (e.key === 'Escape') {
+    acClose(field);
+  }
+}
+
+function acHighlight(field, items) {
+  items.forEach(function(el, i) {
+    el.classList.toggle('focused', i === acFocusIdx[field]);
+  });
 }
 
 function removeModalItem(field, idx) {
@@ -571,6 +755,8 @@ function saveModal() {
   renderList(modalType);
   updateCounts();
   btn.disabled = false;
+  // Add all saved items to pool
+  FIELDS.forEach(function(f){ modalItems[f].forEach(function(v){ addToPool(f,v); }); });
   showToast(editingId ? '✓ Güncellendi' : '✓ Eklendi');
 }
 
@@ -739,6 +925,15 @@ function importData(e) {
           if (!ids.has(entry.id)) { localDb[type].push(entry); added++; }
         });
       });
+      // Pool merge
+      if (imp.pool) {
+        ensurePool();
+        FIELDS.forEach(function(f) {
+          const existing = new Set(localDb.pool[f].map(function(x){ return x.toLowerCase(); }));
+          (imp.pool[f]||[]).forEach(function(x){ if(x && !existing.has(x.toLowerCase())){ localDb.pool[f].push(x); existing.add(x.toLowerCase()); } });
+        });
+      }
+      rebuildPoolFromEntries();
       scheduleSave(); renderAll(); closeSettings();
       showToast('✓ ' + added + ' giriş içe aktarıldı');
     } catch(err) { showToast('❌ Geçersiz dosya'); }
@@ -754,6 +949,59 @@ function clearAllData() {
   showToast('🗑 Tüm veriler silindi');
 }
 
+// ── POOL MANAGER UI ──
+function updatePoolBadges() {
+  ensurePool();
+  FIELDS.forEach(function(f) {
+    var el = document.getElementById('pool-badge-' + f);
+    if (el) {
+      var count = localDb.pool[f].length;
+      el.textContent = count > 0 ? count + ' havuzda' : '';
+    }
+  });
+}
+
+function removeFromPool(field, value) {
+  ensurePool();
+  // value comes in as esc()'d, unescape it
+  var tmp = document.createElement('textarea');
+  tmp.innerHTML = value;
+  var real = tmp.value;
+  localDb.pool[field] = localDb.pool[field].filter(function(x){ return x !== real; });
+  scheduleSave();
+  renderPoolManager(document.getElementById('poolSearch') ? document.getElementById('poolSearch').value : '');
+}
+
+function renderPoolManager(filter) {
+  ensurePool();
+  filter = (filter || '').toLowerCase();
+  var container = document.getElementById('poolManager');
+  if (!container) return;
+  var fieldMeta = [
+    { key:'tanim', label:'Tanım' },
+    { key:'sorgu', label:'Sorgu' },
+    { key:'tetkik', label:'Tetkik' }
+  ];
+  container.innerHTML = fieldMeta.map(function(f) {
+    var items = localDb.pool[f.key]
+      .filter(function(v){ return !filter || v.toLowerCase().includes(filter); })
+      .slice().sort(function(a,b){ return a.localeCompare(b,'tr'); });
+    var chipsHtml = items.length
+      ? items.map(function(v) {
+          return '<span class="pool-chip"><span>' + esc(v) + '</span>' +
+            '<button class="pool-chip-del" onclick="removeFromPool(\'' + f.key + '\',\'' + esc(v) + '\')">×</button></span>';
+        }).join('')
+      : '<div class="pool-empty">' + (filter ? 'Eşleşme yok' : 'Henüz madde yok') + '</div>';
+    return '<div class="pool-section">' +
+      '<div class="pool-field-header">' +
+        '<span class="pool-field-label ' + f.key + '">' + f.label + '</span>' +
+        '<span class="pool-count">' + localDb.pool[f.key].length + ' madde</span>' +
+      '</div>' +
+      '<div class="pool-list">' + chipsHtml + '</div>' +
+      '</div>';
+  }).join('<div style="height:1px;background:var(--border);margin:10px 0"></div>');
+}
+
 // ── HELPERS ──
 function esc(t) { return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function hl(text, q) {
@@ -767,6 +1015,8 @@ function showToast(msg) {
 }
 
 // ── INIT ──
+ensurePool();
+rebuildPoolFromEntries();
 renderAll();
 switchTab('disease');
 </script>
