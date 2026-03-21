@@ -59,9 +59,6 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 }
 .tab-sort-wrap select:hover{border-color:var(--border2);}
 .tab-sort-wrap select:focus{border-color:var(--dis);}
-.tab-sort-wrap select.disease-active:focus{border-color:var(--dis);}
-.tab-sort-wrap select.finding-active:focus{border-color:var(--fin);}
-.tab-sort-wrap select.symptom-active:focus{border-color:var(--sym);}
 .s-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:10px;}
 .auth-block{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;}
 .auth-user-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -102,11 +99,6 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 #searchView{display:none;}#searchView.active{display:block;}
 #mainView.hidden{display:none;}
 
-.sort-bar{display:flex;align-items:center;gap:6px;margin-bottom:12px;}
-.sort-label{font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
-.sort-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:4px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--text3);cursor:pointer;transition:all .15s;}
-.sort-btn:hover{border-color:var(--border2);color:var(--text2);}
-.sort-btn.active{background:var(--text);border-color:var(--text);color:white;}
 
 .add-entry-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:13px 16px;margin-bottom:14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text3);transition:all .15s;width:100%;}
 .add-entry-btn.disease:hover{border-color:var(--dis);color:var(--dis);background:var(--dis-bg);}
@@ -143,16 +135,6 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .i-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
 .item-row:hover .i-del{opacity:1;}
 .i-del:hover{color:var(--dis);}
-.add-item-row{display:flex;align-items:center;gap:8px;padding:5px 16px 8px 32px;}
-.add-item-row input{flex:1;border:none;outline:none;border-bottom:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);background:transparent;padding:4px 0;transition:border-color .15s;}
-.add-item-row input::placeholder{color:var(--text3);font-style:italic;}
-.disease .add-item-row input:focus{border-bottom-color:var(--dis);}
-.finding .add-item-row input:focus{border-bottom-color:var(--fin);}
-.symptom .add-item-row input:focus{border-bottom-color:var(--sym);}
-.add-item-mini{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3);transition:color .15s;line-height:1;flex-shrink:0;}
-.disease .add-item-mini:hover{color:var(--dis);}
-.finding .add-item-mini:hover{color:var(--fin);}
-.symptom .add-item-mini:hover{color:var(--sym);}
 
 .overlay{display:none;position:fixed;inset:0;background:rgba(26,23,20,.45);z-index:200;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);}
 .overlay.open{display:flex;}
@@ -421,9 +403,7 @@ try {
       updateAuthUI(false, null);
     }
   });
-} catch(e) {
-  
-}
+} catch(e) { /* Firebase yüklenemedi, yerel mod aktif */ }
 
 // ── FIRESTORE ──
 function userDocRef() {
@@ -465,6 +445,7 @@ function scheduleSave() {
 
 function setSaving(saving, success) {
   const dot = document.getElementById('savingDot');
+  if (!dot) return;
   if (saving) { dot.className = 'saving-dot saving'; }
   else if (success) { dot.className = 'saving-dot saved'; setTimeout(function(){ dot.className = 'saving-dot'; }, 2000); }
   else { dot.className = 'saving-dot'; }
@@ -590,23 +571,6 @@ function saveModal() {
   showToast(editingId ? '✓ Güncellendi' : '✓ Eklendi');
 }
 
-// ── INLINE ITEM ──
-function addInlineItem(type, entryId, field) {
-  const inp = document.getElementById('ii-' + entryId + '-' + field);
-  const val = inp.value.trim();
-  if (!val) return;
-  const entry = localDb[type].find(function(e){ return e.id === entryId; });
-  if (!entry) return;
-  if (!entry[field]) entry[field] = [];
-  entry[field].push(val);
-  scheduleSave(); inp.value = '';
-  rerenderCard(type, entryId);
-  if (searchQuery) doSearch(searchQuery);
-}
-
-function inlineItemKey(e, type, entryId, field) {
-  if (e.key === 'Enter') { e.preventDefault(); addInlineItem(type, entryId, field); }
-}
 
 function deleteItem(type, entryId, field, idx) {
   const entry = localDb[type].find(function(e){ return e.id === entryId; });
@@ -633,27 +597,25 @@ function toggleCard(id) {
 function cardHTML(type, entry, forceOpen) {
   const card = document.getElementById('card-' + entry.id);
   const wasOpen = forceOpen || (card && card.classList.contains('open'));
+  const safeId = esc(entry.id);
+  const safeType = esc(type);
   const fieldsHtml = FIELDS.map(function(field) {
     const items = entry[field] || [];
     const itemsHtml = items.map(function(item, i) {
       return '<div class="item-row"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span>' +
-        '<button class="i-del" onclick="deleteItem(\'' + type + '\',\'' + entry.id + '\',\'' + field + '\',' + i + ')">×</button></div>';
+        '<button class="i-del" onclick="deleteItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">×</button></div>';
     }).join('');
     return '<div class="field-section">' +
       '<div class="field-header"><span class="field-label" style="color:' + FIELD_COLORS[field] + '">' + FIELD_LABELS[field].toUpperCase() + '</span></div>' +
-      '<div>' + itemsHtml +
-      '<div class="add-item-row">' +
-      '<input id="ii-' + entry.id + '-' + field + '" type="text" placeholder="Ekle…" onkeydown="inlineItemKey(event,\'' + type + '\',\'' + entry.id + '\',\'' + field + '\')">' +
-      '<button class="add-item-mini" onclick="addInlineItem(\'' + type + '\',\'' + entry.id + '\',\'' + field + '\')">+</button>' +
-      '</div></div></div>';
+      '<div>' + itemsHtml + '</div></div>';
   }).join('');
 
-  return '<div class="entry-card ' + type + (wasOpen ? ' open' : '') + '" id="card-' + entry.id + '">' +
-    '<div class="entry-header" onclick="toggleCard(\'' + entry.id + '\')">' +
+  return '<div class="entry-card ' + safeType + (wasOpen ? ' open' : '') + '" id="card-' + safeId + '">' +
+    '<div class="entry-header" onclick="toggleCard(\'' + safeId + '\')">' +
     '<span class="e-dot"></span>' +
     '<span class="e-title">' + esc(entry.title) + '</span>' +
-    '<button class="e-del" onclick="event.stopPropagation();openModal(\'' + type + '\',\'' + entry.id + '\')" title="Düzenle">✏️</button>' +
-    '<button class="e-del" onclick="event.stopPropagation();deleteEntry(\'' + type + '\',\'' + entry.id + '\')" title="Sil">🗑</button>' +
+    '<button class="e-del" onclick="event.stopPropagation();openModal(\'' + safeType + '\',\'' + safeId + '\')" title="Düzenle">✏️</button>' +
+    '<button class="e-del" onclick="event.stopPropagation();deleteEntry(\'' + safeType + '\',\'' + safeId + '\')" title="Sil">🗑</button>' +
     '<span class="chevron">▾</span></div>' +
     '<div class="entry-body"><div>' + fieldsHtml + '</div></div></div>';
 }
@@ -726,8 +688,10 @@ function doSearch(q) {
       return '<div class="sr-field"><div class="sr-field-label ' + field + '" style="color:' + FIELD_COLORS[field] + '">' + FIELD_LABELS[field] + '</div>' +
         items.map(function(i){ return '<div class="sr-item">• ' + hl(i,q) + '</div>'; }).join('') + '</div>';
     }).join('');
-    return '<div class="search-result" onclick="goToCard(\'' + r.type + '\',\'' + r.entry.id + '\')">' +
-      '<div class="sr-header"><span class="sr-badge ' + r.type + '">' + LABELS[r.type] + '</span><span class="sr-title">' + hl(r.entry.title,q) + '</span><span class="sr-goto">Git →</span></div>' +
+    const safeType = esc(r.type);
+    const safeId = esc(r.entry.id);
+    return '<div class="search-result" onclick="goToCard(\'' + safeType + '\',\'' + safeId + '\')">' +
+      '<div class="sr-header"><span class="sr-badge ' + safeType + '">' + LABELS[r.type] + '</span><span class="sr-title">' + hl(r.entry.title,q) + '</span><span class="sr-goto">Git →</span></div>' +
       (fh || '<div class="sr-field" style="color:var(--text3);font-size:13px;font-style:italic">Başlıkta eşleşme</div>') + '</div>';
   }).join('');
 }
@@ -767,7 +731,10 @@ function importData(e) {
       ['disease','finding','symptom'].forEach(function(type) {
         if (!Array.isArray(imp[type])) return;
         const ids = new Set(localDb[type].map(function(e){ return e.id; }));
-        imp[type].forEach(function(entry){ if (!ids.has(entry.id)) { localDb[type].push(entry); added++; } });
+        imp[type].forEach(function(entry){
+          if (!entry.id || !/^[a-zA-Z0-9_-]+$/.test(String(entry.id))) return;
+          if (!ids.has(entry.id)) { localDb[type].push(entry); added++; }
+        });
       });
       scheduleSave(); renderAll(); closeSettings();
       showToast('✓ ' + added + ' giriş içe aktarıldı');
