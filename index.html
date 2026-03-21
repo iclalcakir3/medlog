@@ -22,20 +22,20 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 14px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;height:56px;}
+header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;height:56px;gap:16px;}
 .logo{font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--dis);flex-shrink:0;}
 .logo span{color:var(--text);}
-.search-wrap{flex:1;position:relative;max-width:420px;}
+.search-wrap{position:relative;flex:1;}
 .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
 #searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
 #searchInput:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
-.header-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .saving-dot{width:8px;height:8px;border-radius:50%;background:transparent;flex-shrink:0;transition:background .3s;}
 .saving-dot.saving{background:#f39c12;animation:pulse .6s infinite;}
 .saving-dot.saved{background:#27ae60;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-.settings-btn{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;cursor:pointer;color:var(--text2);font-size:17px;display:flex;align-items:center;transition:all .15s;}
-.settings-btn:hover{background:var(--bg);border-color:var(--border2);}
+.settings-btn{background:none;border:none;padding:0;margin:0;cursor:pointer;color:var(--text2);font-size:20px;display:flex;align-items:center;transition:opacity .15s;line-height:1;width:20px;height:20px;}
+.settings-btn:hover{opacity:.6;}
 
 .settings-panel{position:fixed;inset:0;z-index:300;display:none;}
 .settings-panel.open{display:block;}
@@ -48,7 +48,21 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .s-close:hover{background:var(--bg);}
 .s-body{flex:1;overflow-y:auto;padding:18px 20px;}
 .s-section{margin-bottom:22px;}
-.s-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:10px;}
+
+.tab-sort-wrap{margin-left:auto;display:flex;align-items:center;padding:0 4px;}
+.tab-sort-wrap select{
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg);color:var(--text2);
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;
+  padding:5px 8px;cursor:pointer;outline:none;
+  transition:border-color .15s;
+}
+.tab-sort-wrap select:hover{border-color:var(--border2);}
+.tab-sort-wrap select:focus{border-color:var(--dis);}
+.tab-sort-wrap select.disease-active:focus{border-color:var(--dis);}
+.tab-sort-wrap select.finding-active:focus{border-color:var(--fin);}
+.tab-sort-wrap select.symptom-active:focus{border-color:var(--sym);}
+.s-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:10px;}
 .auth-block{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;}
 .auth-user-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .auth-avatar{width:38px;height:38px;border-radius:50%;border:2px solid var(--border);object-fit:cover;flex-shrink:0;}
@@ -211,7 +225,6 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <input id="searchInput" type="search" placeholder="Ara…" autocomplete="off">
     </div>
     <div class="header-right">
-      <div class="saving-dot" id="savingDot"></div>
       <button class="settings-btn" onclick="openSettings()" title="Ayarlar">⚙️</button>
     </div>
   </header>
@@ -220,6 +233,12 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
     <button class="tab-btn active" data-tab="disease" onclick="switchTab('disease')">🔴 <span class="lbl">Hastalık</span><span class="cnt" id="cnt-disease">0</span></button>
     <button class="tab-btn" data-tab="finding" onclick="switchTab('finding')">🔵 <span class="lbl">Bulgu</span><span class="cnt" id="cnt-finding">0</span></button>
     <button class="tab-btn" data-tab="symptom" onclick="switchTab('symptom')">🟢 <span class="lbl">Belirti</span><span class="cnt" id="cnt-symptom">0</span></button>
+    <div class="tab-sort-wrap">
+      <select id="sortSelect" onchange="setSortFromSelect(this.value)">
+        <option value="new">En yeni</option>
+        <option value="az">A → Z</option>
+      </select>
+    </div>
   </nav>
 
   <div class="app">
@@ -230,28 +249,16 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
     <div id="mainView">
       <div class="tab-panel active" id="panel-disease">
         <button class="add-entry-btn disease" onclick="openModal('disease')"><span style="font-size:18px">+</span> Yeni hastalık ekle</button>
-        <div class="sort-bar"><span class="sort-label">Sırala:</span>
-          <button class="sort-btn active" onclick="setSort('disease','new',this)">En yeni</button>
-          <button class="sort-btn" onclick="setSort('disease','az',this)">A → Z</button>
-        </div>
         <div class="sec-stats" id="stats-disease"></div>
         <div id="list-disease"></div>
       </div>
       <div class="tab-panel" id="panel-finding">
         <button class="add-entry-btn finding" onclick="openModal('finding')"><span style="font-size:18px">+</span> Yeni bulgu ekle</button>
-        <div class="sort-bar"><span class="sort-label">Sırala:</span>
-          <button class="sort-btn active" onclick="setSort('finding','new',this)">En yeni</button>
-          <button class="sort-btn" onclick="setSort('finding','az',this)">A → Z</button>
-        </div>
         <div class="sec-stats" id="stats-finding"></div>
         <div id="list-finding"></div>
       </div>
       <div class="tab-panel" id="panel-symptom">
         <button class="add-entry-btn symptom" onclick="openModal('symptom')"><span style="font-size:18px">+</span> Yeni belirti ekle</button>
-        <div class="sort-bar"><span class="sort-label">Sırala:</span>
-          <button class="sort-btn active" onclick="setSort('symptom','new',this)">En yeni</button>
-          <button class="sort-btn" onclick="setSort('symptom','az',this)">A → Z</button>
-        </div>
         <div class="sec-stats" id="stats-symptom"></div>
         <div id="list-symptom"></div>
       </div>
@@ -265,6 +272,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
   <div class="s-drawer">
     <div class="s-head">
       <span class="s-head-title">Ayarlar</span>
+      <div class="saving-dot" id="savingDot" style="margin-left:auto;margin-right:10px"></div>
       <button class="s-close" onclick="closeSettings()">✕</button>
     </div>
     <div class="s-body">
@@ -298,12 +306,12 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         <button class="s-btn" onclick="exportData()">📤 Verileri dışa aktar (JSON)</button>
         <button class="s-btn" onclick="document.getElementById('importFile').click()">📥 Verileri içe aktar (JSON)</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-        <div class="s-divider"></div>
         <button class="s-btn danger" onclick="clearAllData()">🗑 Tüm verileri sil</button>
       </div>
+      <div class="s-divider"></div>
       <div class="s-section">
         <div class="s-section-title">Uygulama</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.7;">MedLog — Klinik not defteri<br>Giriş yapmadan kullanabilirsin. Giriş yaparsan veriler Firebase ile senkronize edilir.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7;">MedLog @ iclalcakir</div>
       </div>
     </div>
   </div>
@@ -414,7 +422,7 @@ try {
     }
   });
 } catch(e) {
-  console.log('Firebase unavailable, using local only');
+  
 }
 
 // ── FIRESTORE ──
@@ -491,13 +499,18 @@ function closeSettings() { document.getElementById('settingsPanel').classList.re
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tab); });
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'panel-' + tab); });
+  var sel = document.getElementById('sortSelect');
+  sel.value = sortOrder[tab];
+  sel.style.borderColor = tab === 'disease' ? 'var(--dis)' : tab === 'finding' ? 'var(--fin)' : 'var(--sym)';
+  sel.style.color = tab === 'disease' ? 'var(--dis)' : tab === 'finding' ? 'var(--fin)' : 'var(--sym)';
 }
 
 // ── SORT ──
-function setSort(type, order, btn) {
+function setSortFromSelect(order) {
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (!activeBtn) return;
+  const type = activeBtn.dataset.tab;
   sortOrder[type] = order;
-  document.querySelectorAll('#panel-' + type + ' .sort-btn').forEach(function(b){ b.classList.remove('active'); });
-  btn.classList.add('active');
   renderList(type);
 }
 
@@ -661,7 +674,7 @@ function renderList(type) {
   const totalItems = entries.reduce(function(a,e){ return a + FIELDS.reduce(function(b,f){ return b + (e[f]||[]).length; }, 0); }, 0);
   document.getElementById('stats-' + type).innerHTML = '<strong>' + entries.length + '</strong> giriş · <strong>' + totalItems + '</strong> madde';
   if (!entries.length) {
-    const icons = { disease:'🩺', finding:'🔬', symptom:'💊' };
+    const icons = { disease:'🩺', finding:'🔬', symptom:'🤒' };
     container.innerHTML = '<div class="empty-state"><div class="ei">' + icons[type] + '</div><h3>Henüz ' + LABELS[type].toLowerCase() + ' eklenmedi</h3><p>Yukarıdaki butona tıklayarak ilk kaydını ekle.</p></div>';
     return;
   }
@@ -785,6 +798,7 @@ function showToast(msg) {
 
 // ── INIT ──
 renderAll();
+switchTab('disease');
 </script>
 </body>
 </html>
