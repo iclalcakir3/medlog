@@ -9,8 +9,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="MedLog">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon.png?v=2">
+<link rel="icon" type="image/png" sizes="512x512" href="icon.png?v=2">
+<link rel="shortcut icon" href="icon.png?v=2">
 <style>
 :root {
   --bg:#f5f2ee; --surface:#fff; --surface2:#faf8f5;
@@ -212,9 +213,42 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
   .tab-btn{padding:12px 10px;font-size:13px;}
   .tab-btn .lbl{display:none;}
 }
+
+/* ── PULL TO REFRESH ── */
+#ptr-indicator{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  height:0;overflow:hidden;
+  background:var(--surface);
+  border-bottom:1.5px solid var(--border);
+  z-index:150;
+  transition:height .2s ease, opacity .2s ease;
+  opacity:0;
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text3);
+}
+#ptr-indicator.pulling{opacity:1;}
+#ptr-indicator.ready{color:var(--dis);}
+#ptr-indicator.refreshing{height:52px;opacity:1;}
+.ptr-spinner{
+  width:18px;height:18px;
+  border:2.5px solid var(--border2);
+  border-top-color:var(--dis);
+  border-radius:50%;
+  flex-shrink:0;
+  transition:transform .25s ease;
+}
+#ptr-indicator.refreshing .ptr-spinner{
+  animation:ptr-spin .7s linear infinite;
+}
+@keyframes ptr-spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
+
+<div id="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+  <span id="ptr-label">Yenilemek için çek…</span>
+</div>
 
 <div id="appScreen">
   <header>
@@ -1013,6 +1047,99 @@ function showToast(msg) {
   const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
   setTimeout(function(){ t.classList.remove('show'); }, 2200);
 }
+
+// ── PULL TO REFRESH ──
+(function(){
+  var PTR_THRESHOLD = 72; // px to trigger refresh
+  var startY = 0, currentY = 0, pulling = false, refreshing = false;
+  var ind = document.getElementById('ptr-indicator');
+  var spinner = document.getElementById('ptr-spinner');
+  var label = document.getElementById('ptr-label');
+
+  function canPull() {
+    return window.scrollY === 0 && !refreshing;
+  }
+
+  document.addEventListener('touchstart', function(e){
+    if (!canPull()) return;
+    startY = e.touches[0].clientY;
+    pulling = true;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e){
+    if (!pulling || !canPull()) return;
+    currentY = e.touches[0].clientY;
+    var dist = Math.max(0, currentY - startY);
+    if (dist <= 0) return;
+
+    // Rubber-band damping
+    var pull = Math.min(dist * 0.45, PTR_THRESHOLD * 1.1);
+    var ratio = Math.min(pull / PTR_THRESHOLD, 1);
+
+    ind.style.height = pull + 'px';
+    ind.classList.add('pulling');
+    spinner.style.transform = 'rotate(' + (ratio * 240) + 'deg)';
+
+    if (ratio >= 1) {
+      ind.classList.add('ready');
+      label.textContent = 'Bırak, yenile';
+    } else {
+      ind.classList.remove('ready');
+      label.textContent = 'Yenilemek için çek…';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(){
+    if (!pulling) return;
+    pulling = false;
+    var dist = Math.max(0, currentY - startY);
+    var pull = dist * 0.45;
+
+    if (pull >= PTR_THRESHOLD) {
+      doRefresh();
+    } else {
+      reset();
+    }
+    startY = 0; currentY = 0;
+  });
+
+  function doRefresh() {
+    refreshing = true;
+    ind.style.height = '';
+    ind.classList.remove('pulling','ready');
+    ind.classList.add('refreshing');
+    label.textContent = 'Yenileniyor…';
+    spinner.style.transform = '';
+
+    // Sync or just reload local
+    var done = function(){
+      refreshing = false;
+      ind.classList.remove('refreshing');
+      ind.style.height = '0';
+      ind.style.opacity = '0';
+      setTimeout(function(){ ind.style.height = ''; ind.style.opacity = ''; }, 300);
+      rebuildPoolFromEntries();
+      renderAll();
+      showToast('✓ Yenilendi');
+    };
+
+    if (currentUser && db) {
+      syncFromFirebase().then(done).catch(done);
+    } else {
+      setTimeout(done, 600);
+    }
+  }
+
+  function reset() {
+    ind.style.height = '0';
+    ind.style.opacity = '0';
+    setTimeout(function(){
+      ind.classList.remove('pulling','ready');
+      ind.style.height = '';
+      ind.style.opacity = '';
+    }, 200);
+  }
+})();
 
 // ── INIT ──
 ensurePool();
