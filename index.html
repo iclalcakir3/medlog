@@ -101,7 +101,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .info-body-item:hover{background:var(--surface2);}
 .info-body-dot{width:5px;height:5px;border-radius:50%;background:#b7860b;opacity:.7;flex-shrink:0;margin-top:7px;}
 .info-body-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
-.info-body-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
+.info-body-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
 .info-body-item:hover .info-body-del{opacity:1;}
 .info-body-del:hover{color:var(--dis);}
 
@@ -168,7 +168,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .item-row:hover{background:var(--surface2);}
 .i-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:7px;opacity:.4;background:var(--text2);}
 .i-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
-.i-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
+.i-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
 .item-row:hover .i-del{opacity:1;}
 .i-del:hover{color:var(--dis);}
 
@@ -797,11 +797,12 @@ function renderAcDropdown(field, q, suggestions) {
     dd.classList.remove('open');
     return;
   }
+  var qRe = q ? q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') : '';
   var html = suggestions.map(function(s, i) {
-    var qEsc = q ? q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') : '';
-    var label = q ? esc(s).replace(new RegExp('(' + qEsc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>') : esc(s);
-    return '<div class="ac-item" id="ac-item-' + field + '-' + i + '" onmousedown="acSelect(event,\'' + field + '\',\'' + esc(s).replace(/'/g,'&#39;') + '\')">' +
-      '<span class="ac-icon">↩</span><span style="flex:1">' + label + '</span>' +
+    var label = q ? esc(s).replace(new RegExp('(' + qRe + ')', 'gi'), '<mark>$1</mark>') : esc(s);
+    var safeVal = esc(s).replace(/'/g,'&#39;');
+    return '<div class="ac-item" id="ac-item-' + field + '-' + i + '" onmousedown="acSelect(event,\'' + field + '\',\'' + safeVal + '\')">' +
+      '<span class="ac-icon">&#x21A9;</span><span style="flex:1">' + label + '</span>' +
       '</div>';
   }).join('');
   if (q) {
@@ -866,12 +867,35 @@ function removeModalItem(field, idx) {
 function renderModalItems() {
   FIELDS.forEach(function(field) {
     document.getElementById('items-' + field).innerHTML = modalItems[field].map(function(item, i) {
-      return '<div style="display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">' +
-        '<span style="font-size:12px;color:var(--text3);margin-top:2px">•</span>' +
-        '<span style="flex:1;font-size:13px;color:var(--text2)">' + esc(item) + '</span>' +
-        '<button onclick="removeModalItem(\'' + field + '\',' + i + ')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;line-height:1;padding:0">×</button>' +
+      return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">' +
+        '<span style="font-size:12px;color:var(--text3);flex-shrink:0">&#8226;</span>' +
+        '<span style="flex:1;font-size:13px;color:var(--text2);cursor:text;" title="Düzenlemek için tıkla" onclick="startEditModalItem(\'' + field + '\',' + i + ',this)">' + esc(item) + '</span>' +
+        '<button onclick="removeModalItem(\'' + field + '\',' + i + ')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;line-height:1;padding:0;flex-shrink:0">&#215;</button>' +
         '</div>';
     }).join('');
+  });
+}
+
+function startEditModalItem(field, idx, el) {
+  var current = modalItems[field][idx];
+  var inp = document.createElement('input');
+  inp.value = current;
+  inp.style.cssText = 'flex:1;font-size:13px;color:var(--text);border:1.5px solid var(--dis);border-radius:6px;padding:2px 6px;font-family:Nunito,sans-serif;outline:none;width:100%;';
+  el.replaceWith(inp);
+  inp.focus(); inp.select();
+  function commit() {
+    var val = inp.value.trim();
+    if (val && val !== current) {
+      var dup = modalItems[field].some(function(x,j){ return j!==idx && x.toLowerCase()===val.toLowerCase(); });
+      if (dup) { showToast('Bu madde zaten var'); renderModalItems(); return; }
+      modalItems[field][idx] = val;
+    }
+    renderModalItems();
+  }
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
+    if (e.key==='Escape') { inp.value=current; inp.blur(); }
   });
 }
 
@@ -916,6 +940,59 @@ function deleteEntry(type, id) {
   });
 }
 
+function editItem(type, entryId, field, idx, btn) {
+  var entry = localDb[type].find(function(e){ return e.id === entryId; });
+  if (!entry || !entry[field]) return;
+  var current = entry[field][idx];
+  var row = btn.closest('.item-row');
+  var textEl = row.querySelector('.i-text');
+  var inp = document.createElement('input');
+  inp.value = current;
+  inp.style.cssText = 'flex:1;font-size:14px;color:var(--text);border:1.5px solid var(--dis);border-radius:6px;padding:2px 8px;font-family:Nunito,sans-serif;outline:none;width:100%;';
+  textEl.replaceWith(inp);
+  inp.focus(); inp.select();
+  function commit() {
+    var val = inp.value.trim();
+    if (val && val !== current) {
+      entry[field][idx] = val;
+      scheduleSave();
+      if (searchQuery) doSearch(searchQuery);
+    }
+    rerenderCard(type, entryId);
+  }
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
+    if (e.key==='Escape') { inp.value=current; inp.blur(); }
+  });
+}
+
+function editInfoItem(entryId, idx, btn) {
+  var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
+  if (!entry) return;
+  var current = entry.items[idx];
+  var row = btn.closest('.info-body-item');
+  var textEl = row.querySelector('.info-body-text');
+  var inp = document.createElement('input');
+  inp.value = current;
+  inp.style.cssText = 'flex:1;font-size:14px;color:var(--text);border:1.5px solid #b7860b;border-radius:6px;padding:2px 8px;font-family:Nunito,sans-serif;outline:none;width:100%;';
+  textEl.replaceWith(inp);
+  inp.focus(); inp.select();
+  function commit() {
+    var val = inp.value.trim();
+    if (val && val !== current) {
+      entry.items[idx] = val;
+      scheduleSave();
+    }
+    renderInfoList();
+  }
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
+    if (e.key==='Escape') { inp.value=current; inp.blur(); }
+  });
+}
+
 function toggleCard(id) {
   const c = document.getElementById('card-' + id);
   if (c) c.classList.toggle('open');
@@ -931,7 +1008,8 @@ function cardHTML(type, entry, forceOpen) {
     const items = entry[field] || [];
     const itemsHtml = items.map(function(item, i) {
       return '<div class="item-row"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span>' +
-        '<button class="i-del" onclick="deleteItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">×</button></div>';
+        '<button class="i-del" title="Düzenle" onclick="editItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ',this)">✏️</button>' +
+        '<button class="i-del" onclick="deleteItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">&#215;</button></div>';
     }).join('');
     return '<div class="field-section">' +
       '<div class="field-header"><span class="field-label" style="color:' + FIELD_COLORS[field] + '">' + FIELD_LABELS[field].toUpperCase() + '</span></div>' +
@@ -1142,10 +1220,29 @@ function renderInfoModalItems() {
   document.getElementById('im-items').innerHTML = infoModalItems.map(function(item, i) {
     return '<div class="info-item-row">' +
       '<span class="info-item-dot"></span>' +
-      '<span class="info-item-text">' + esc(item) + '</span>' +
-      '<button class="info-item-del" onclick="removeInfoModalItem(' + i + ')">×</button>' +
+      '<span class="info-item-text" style="cursor:text;" title="Düzenlemek için tıkla" onclick="startEditInfoModalItem(' + i + ',this)">' + esc(item) + '</span>' +
+      '<button class="info-item-del" onclick="removeInfoModalItem(' + i + ')">&#215;</button>' +
       '</div>';
   }).join('');
+}
+
+function startEditInfoModalItem(idx, el) {
+  var current = infoModalItems[idx];
+  var inp = document.createElement('input');
+  inp.value = current;
+  inp.style.cssText = 'flex:1;font-size:13px;color:var(--text);border:1.5px solid #b7860b;border-radius:6px;padding:2px 6px;font-family:Nunito,sans-serif;outline:none;width:100%;';
+  el.replaceWith(inp);
+  inp.focus(); inp.select();
+  function commit() {
+    var val = inp.value.trim();
+    if (val && val !== current) { infoModalItems[idx] = val; }
+    renderInfoModalItems();
+  }
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
+    if (e.key==='Escape') { inp.value=current; inp.blur(); }
+  });
 }
 
 function saveInfoModal() {
@@ -1193,7 +1290,8 @@ function infoCardHTML(entry) {
     return '<div class="info-body-item">' +
       '<span class="info-body-dot"></span>' +
       '<span class="info-body-text">' + esc(item) + '</span>' +
-      '<button class="info-body-del" onclick="deleteInfoItem(\'' + safeId + '\',' + i + ')">×</button>' +
+      '<button class="info-body-del" title="Düzenle" onclick="editInfoItem(\'' + safeId + '\',' + i + ',this)">✏️</button>' +
+      '<button class="info-body-del" onclick="deleteInfoItem(\'' + safeId + '\',' + i + ')">&#215;</button>' +
       '</div>';
   }).join('') || '<div style="padding:10px 16px;font-size:13px;color:var(--text3);font-style:italic;">Not yok</div>';
 
