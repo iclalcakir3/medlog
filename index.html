@@ -406,7 +406,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
     <div class="modal-body">
       <div class="mfield">
         <label>📌 Başlık</label>
-        <input id="m-title" type="text" placeholder="Giriş başlığı…">
+        <input id="m-title" type="text" placeholder="Giriş başlığı…" autocomplete="off" autocorrect="off" autocapitalize="off" data-lpignore="true" data-1p-ignore>
       </div>
       <div class="mfield mfield-tanim">
         <label>Tanım <span class="pool-badge" id="pool-badge-tanim"></span></label>
@@ -486,13 +486,13 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
     <div class="modal-body">
       <div class="mfield">
         <label>📌 Başlık</label>
-        <input id="im-title" type="text" placeholder="Kart başlığı…">
+        <input id="im-title" type="text" placeholder="Kart başlığı…" autocomplete="off" autocorrect="off" autocapitalize="off" data-lpignore="true" data-1p-ignore>
       </div>
       <div class="mfield" style="border-top:1px solid var(--border);padding-top:12px;">
         <label style="color:#b7860b;">Notlar</label>
         <div id="im-items"></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-          <input id="im-new" type="text" placeholder="Not ekle… (Enter)"
+          <input id="im-new" type="text" placeholder="Not ekle… (Enter)" autocomplete="off"
             style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s;"
             onfocus="this.style.borderColor='#b7860b'" onblur="this.style.borderColor=''"
             onkeydown="if(event.key==='Enter'){addInfoItem();this.focus();}">
@@ -718,6 +718,7 @@ function closeSettings() { document.getElementById('settingsPanel').classList.re
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab === tab); });
   document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'panel-' + tab); });
+  document.querySelectorAll('.entry-card.open').forEach(function(c){ c.classList.remove('open'); });
   if (tab === 'info') renderInfoList();
 }
 
