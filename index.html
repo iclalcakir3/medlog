@@ -267,20 +267,21 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
   background:var(--surface);
   border-bottom:1.5px solid var(--border);
   z-index:150;
-  transition:height .2s ease, opacity .2s ease;
   opacity:0;
   font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text3);
 }
 #ptr-indicator.pulling{opacity:1;}
 #ptr-indicator.ready{color:var(--dis);}
-#ptr-indicator.refreshing{height:52px;opacity:1;}
+#ptr-indicator.refreshing{
+  height:52px;opacity:1;
+  transition:height .25s ease, opacity .2s ease;
+}
 .ptr-spinner{
   width:18px;height:18px;
   border:2.5px solid var(--border2);
   border-top-color:var(--dis);
   border-radius:50%;
   flex-shrink:0;
-  transition:transform .25s ease;
 }
 #ptr-indicator.refreshing .ptr-spinner{
   animation:ptr-spin .7s linear infinite;
@@ -1429,35 +1430,53 @@ function showToast(msg) {
 
 // ── PULL TO REFRESH ──
 (function(){
-  var PTR_THRESHOLD = 72; // px to trigger refresh
-  var startY = 0, currentY = 0, pulling = false, refreshing = false;
+  var PTR_THRESHOLD = 72;
+  var startY = 0, lastY = 0, pulling = false, refreshing = false;
   var ind = document.getElementById('ptr-indicator');
   var spinner = document.getElementById('ptr-spinner');
   var label = document.getElementById('ptr-label');
 
-  function canPull() {
-    return window.scrollY === 0 && !refreshing;
-  }
-
+  // Sadece sayfanın en üstündeyken ve refresh yokken başlat
   document.addEventListener('touchstart', function(e){
-    if (!canPull()) return;
+    if (refreshing || window.scrollY > 0) return;
     startY = e.touches[0].clientY;
-    pulling = true;
+    lastY = startY;
+    pulling = false; // henüz yönü bilmiyoruz
   }, { passive: true });
 
   document.addEventListener('touchmove', function(e){
-    if (!pulling || !canPull()) return;
-    currentY = e.touches[0].clientY;
-    var dist = Math.max(0, currentY - startY);
-    if (dist <= 0) return;
+    if (refreshing) return;
+    var y = e.touches[0].clientY;
+    var dist = y - startY;
+
+    // Yukarı kaydırıyorsa PTR'yi iptal et
+    if (dist <= 0) {
+      if (pulling) reset();
+      pulling = false;
+      lastY = y;
+      return;
+    }
+
+    // Sayfa scroll pozisyonu 0'dan ayrıldıysa iptal et
+    if (window.scrollY > 0) {
+      if (pulling) reset();
+      pulling = false;
+      lastY = y;
+      return;
+    }
+
+    pulling = true;
+    lastY = y;
 
     // Rubber-band damping
-    var pull = Math.min(dist * 0.45, PTR_THRESHOLD * 1.1);
+    var pull = Math.min(dist * 0.45, PTR_THRESHOLD * 1.15);
     var ratio = Math.min(pull / PTR_THRESHOLD, 1);
 
     ind.style.height = pull + 'px';
+    ind.style.opacity = '1';
     ind.classList.add('pulling');
-    spinner.style.transform = 'rotate(' + (ratio * 240) + 'deg)';
+    ind.classList.remove('refreshing');
+    spinner.style.transform = 'rotate(' + (ratio * 260) + 'deg)';
 
     if (ratio >= 1) {
       ind.classList.add('ready');
@@ -1471,7 +1490,8 @@ function showToast(msg) {
   document.addEventListener('touchend', function(){
     if (!pulling) return;
     pulling = false;
-    var dist = Math.max(0, currentY - startY);
+
+    var dist = lastY - startY;
     var pull = dist * 0.45;
 
     if (pull >= PTR_THRESHOLD) {
@@ -1479,41 +1499,55 @@ function showToast(msg) {
     } else {
       reset();
     }
-    startY = 0; currentY = 0;
+  });
+
+  document.addEventListener('touchcancel', function(){
+    if (pulling) reset();
+    pulling = false;
   });
 
   function doRefresh() {
     refreshing = true;
+    // Inline height'ı temizle, .refreshing class'ı CSS'teki 52px'i devreye sokar
     ind.style.height = '';
-    ind.classList.remove('pulling','ready');
+    ind.style.opacity = '';
+    ind.classList.remove('pulling', 'ready');
     ind.classList.add('refreshing');
     label.textContent = 'Yenileniyor…';
     spinner.style.transform = '';
 
-    // Sync or just reload local
-    var done = function(){
+    function done() {
       refreshing = false;
-      ind.classList.remove('refreshing');
-      ind.style.height = '0';
+      ind.classList.remove('refreshing', 'pulling', 'ready');
+      // Geçişi CSS transition ile yap — inline style ile çakışma olmasın
       ind.style.opacity = '0';
-      setTimeout(function(){ ind.style.height = ''; ind.style.opacity = ''; }, 300);
+      setTimeout(function(){
+        ind.style.height = '0';
+        setTimeout(function(){
+          ind.style.height = '';
+          ind.style.opacity = '';
+        }, 250);
+      }, 150);
       rebuildPoolFromEntries();
       renderAll();
       showToast('✓ Yenilendi');
-    };
+    }
 
     if (currentUser && db) {
-      syncFromFirebase().then(done).catch(done);
+      syncFromFirebase().then(done).catch(function(e){
+        console.error('Pull-to-refresh sync hatası:', e);
+        showToast('⚠️ Senkronizasyon başarısız');
+        done();
+      });
     } else {
       setTimeout(done, 600);
     }
   }
 
   function reset() {
-    ind.style.height = '0';
+    ind.classList.remove('pulling', 'ready', 'refreshing');
     ind.style.opacity = '0';
     setTimeout(function(){
-      ind.classList.remove('pulling','ready');
       ind.style.height = '';
       ind.style.opacity = '';
     }, 200);
