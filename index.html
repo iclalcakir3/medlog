@@ -27,13 +27,13 @@
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
 header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 12px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:8px;height:56px;}
-.logo{font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--dis);flex-shrink:0;}
+.logo{font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--dis);flex-shrink:0;min-width:72px;}
 .logo span{color:var(--text);}
 .search-wrap{position:relative;flex:1;}
 .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
 #searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
 #searchInput:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
-.header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:72px;justify-content:flex-end;}
 .hdr-btn{background:none;border:none;padding:0;margin:0;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;width:24px;height:24px;transition:opacity .15s;flex-shrink:0;}
 .hdr-btn svg{width:20px;height:20px;}
 .hdr-btn:hover{opacity:.55;}
@@ -430,7 +430,6 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <input id="searchInput" type="search" placeholder="Ara…" autocomplete="off">
     </div>
     <div class="header-right">
-      <div class="saving-dot" id="savingDotHeader" title="Kayıt durumu"></div>
       <button class="hdr-btn" onclick="openExam()" title="Sınav">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       </button>
@@ -901,13 +900,11 @@ function scheduleSave() {
 }
 
 function setSaving(saving, success) {
-  ['savingDot', 'savingDotHeader'].forEach(function(id) {
-    const dot = document.getElementById(id);
-    if (!dot) return;
-    if (saving) { dot.className = 'saving-dot saving'; }
-    else if (success) { dot.className = 'saving-dot saved'; setTimeout(function(){ dot.className = 'saving-dot'; }, 2000); }
-    else { dot.className = 'saving-dot'; }
-  });
+  const dot = document.getElementById('savingDot');
+  if (!dot) return;
+  if (saving) { dot.className = 'saving-dot saving'; }
+  else if (success) { dot.className = 'saving-dot saved'; setTimeout(function(){ dot.className = 'saving-dot'; }, 2000); }
+  else { dot.className = 'saving-dot'; }
 }
 
 function updateAuthUI(loggedIn, user) {
