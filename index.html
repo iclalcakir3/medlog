@@ -31,7 +31,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .logo span{color:var(--text);}
 .search-wrap{position:relative;flex:1;}
 .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
-#searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+#searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
 #searchInput:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
 .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .saving-dot{width:8px;height:8px;border-radius:50%;background:transparent;flex-shrink:0;transition:background .3s;}
@@ -118,7 +118,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .pool-drawer-close{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:4px 10px;cursor:pointer;color:var(--text3);font-size:14px;transition:all .15s;}
 .pool-drawer-close:hover{background:var(--bg);}
 .pool-drawer-body{flex:1;overflow-y:auto;padding:14px 20px;}
-.pool-drawer-search{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);background:var(--surface2);outline:none;margin-bottom:12px;transition:border-color .2s;}
+.pool-drawer-search{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;margin-bottom:12px;transition:border-color .2s;}
 .pool-drawer-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;min-height:20px;}
 .pool-drawer-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px 5px 12px;border-radius:14px;font-size:13px;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);}
 .pool-drawer-chip span{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -126,7 +126,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .pool-drawer-chip button:hover{color:var(--dis);}
 .pool-drawer-empty{font-size:13px;color:var(--text3);font-style:italic;padding:4px 0 14px;}
 .pool-drawer-add{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:12px;}
-.pool-drawer-input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s;}
+.pool-drawer-input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s;}
 .pool-drawer-btn{border:none;border-radius:var(--radius-sm);padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:white;white-space:nowrap;transition:opacity .15s;}
 .pool-drawer-btn:hover{opacity:.85;}
 
@@ -188,7 +188,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .mfield-sorgu label{color:#8e44ad;}
 .mfield-tetkik label{color:#d35400;}
 .mfield-notlar label{color:#1a7a6e;}
-.mfield input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s,box-shadow .2s;}
+.mfield input, .mfield-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s,box-shadow .2s;}
 .mfield input:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
 .mfield input::placeholder{color:var(--text3);}
 .modal-footer{padding:14px 20px;border-top:1.5px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
@@ -303,6 +303,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <input id="searchInput" type="search" placeholder="Ara…" autocomplete="off">
     </div>
     <div class="header-right">
+      <div class="saving-dot" id="savingDotHeader" title="Kayıt durumu"></div>
       <button class="settings-btn" onclick="openSettings()" title="Ayarlar">⚙️</button>
     </div>
   </header>
@@ -493,7 +494,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         <div id="im-items"></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
           <input id="im-new" type="text" placeholder="Not ekle… (Enter)" autocomplete="off"
-            style="flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s;"
+            class="mfield-input"
             onfocus="this.style.borderColor='#b7860b'" onblur="this.style.borderColor=''"
             onkeydown="if(event.key==='Enter'){addInfoItem();this.focus();}">
           <button onclick="addInfoItem()" style="background:none;border:none;cursor:pointer;color:#b7860b;font-size:22px;line-height:1;">+</button>
@@ -591,17 +592,27 @@ function rebuildPoolFromEntries() {
   });
 }
 
-function addToPool(field, value) {
-  ensurePool();
-  var v = value.trim();
-  if (!v) return;
-  var exists = localDb.pool[field].some(function(x){ return x.toLowerCase() === v.toLowerCase(); });
-  if (!exists) localDb.pool[field].push(v);
-}
+// addToPool kaldırıldı — rebuildPoolFromEntries() her zaman pool'u sıfırdan inşa eder,
+// dolayısıyla ayrıca addToPool çağırmak gereksizdi.
 
 function saveLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(localDb)); }
 
 // ── FIREBASE ──
+// ⚠️  GÜVENLİK NOTU: Bu yapılandırma public kaynak kodunda görünür durumdadır.
+// Firebase client config'i gizlemek mümkün değildir — güvenlik tamamen
+// Firestore Security Rules üzerinden sağlanmalıdır.
+// Aktif kural (Firebase Console → Firestore → Rules):
+//
+//   rules_version = '2';
+//   service cloud.firestore {
+//     match /databases/{database}/documents {
+//       match /users/{userId}/{document=**} {
+//         allow read, write: if request.auth != null && request.auth.uid == userId;
+//       }
+//     }
+//   }
+//
+// Bu kural ile yalnızca oturum açmış kullanıcı kendi verisine erişebilir. ✓
 const firebaseConfig = {
   apiKey: "AIzaSyB9TXfNcr98GXJmBMluEAuu-_AEp7Skh6k",
   authDomain: "iclalcakirmedlog.firebaseapp.com",
@@ -621,7 +632,12 @@ try {
   auth.onAuthStateChanged(async function(user) {
     if (user) {
       currentUser = user;
-      await syncFromFirebase();
+      try {
+        await syncFromFirebase();
+      } catch(e) {
+        console.error('Sync on auth change failed:', e);
+        showToast('⚠️ Senkronizasyon başarısız, yerel veri kullanılıyor');
+      }
       updateAuthUI(true, user);
       renderAll();
     } else {
@@ -633,6 +649,7 @@ try {
 
 // ── FIRESTORE ──
 function userDocRef() {
+  // Path: users/{uid}/data/medlog — kuralımız users/{userId}/{document=**} ile uyumlu
   return db.collection('users').doc(currentUser.uid).collection('data').doc('medlog');
 }
 
@@ -681,11 +698,13 @@ function scheduleSave() {
 }
 
 function setSaving(saving, success) {
-  const dot = document.getElementById('savingDot');
-  if (!dot) return;
-  if (saving) { dot.className = 'saving-dot saving'; }
-  else if (success) { dot.className = 'saving-dot saved'; setTimeout(function(){ dot.className = 'saving-dot'; }, 2000); }
-  else { dot.className = 'saving-dot'; }
+  ['savingDot', 'savingDotHeader'].forEach(function(id) {
+    const dot = document.getElementById(id);
+    if (!dot) return;
+    if (saving) { dot.className = 'saving-dot saving'; }
+    else if (success) { dot.className = 'saving-dot saved'; setTimeout(function(){ dot.className = 'saving-dot'; }, 2000); }
+    else { dot.className = 'saving-dot'; }
+  });
 }
 
 function updateAuthUI(loggedIn, user) {
@@ -800,10 +819,10 @@ function renderAcDropdown(field, q, suggestions) {
     return;
   }
   var qRe = q ? q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') : '';
+  // Öğeleri data-value attribute ile oluştur — onclick içinde string concat güvenlik riski taşır
   var html = suggestions.map(function(s, i) {
     var label = q ? esc(s).replace(new RegExp('(' + qRe + ')', 'gi'), '<mark>$1</mark>') : esc(s);
-    var safeVal = esc(s).replace(/'/g,'&#39;');
-    return '<div class="ac-item" id="ac-item-' + field + '-' + i + '" onmousedown="acSelect(event,\'' + field + '\',\'' + safeVal + '\')">' +
+    return '<div class="ac-item" id="ac-item-' + field + '-' + i + '" data-acfield="' + esc(field) + '" data-acvalue="' + esc(s) + '">' +
       '<span class="ac-icon">&#x21A9;</span><span style="flex:1">' + label + '</span>' +
       '</div>';
   }).join('');
@@ -814,13 +833,17 @@ function renderAcDropdown(field, q, suggestions) {
     }
   }
   dd.innerHTML = html;
+  // Event delegation ile güvenli seçim
+  dd.querySelectorAll('.ac-item').forEach(function(el) {
+    el.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      addModalItem(el.dataset.acfield, el.dataset.acvalue);
+    });
+  });
   dd.classList.add('open');
 }
 
-function acSelect(e, field, value) {
-  e.preventDefault();
-  addModalItem(field, value);
-}
+// acSelect kaldırıldı — renderAcDropdown içinde event delegation kullanılıyor
 
 function acClose(field) {
   var dd = document.getElementById('ac-' + field);
@@ -878,26 +901,89 @@ function renderModalItems() {
   });
 }
 
+// ── SHARED INLINE EDIT HELPER ──
+// Bir DOM elemanını (textEl) input'a çevirir. commit(newVal) ile değeri kaydeder.
+function startInlineEdit(textEl, currentValue, borderColor, onCommit) {
+  var inp = document.createElement('input');
+  inp.value = currentValue;
+  inp.style.cssText = 'flex:1;font-size:16px;color:var(--text);border:1.5px solid ' + borderColor + ';border-radius:6px;padding:2px 8px;font-family:Nunito,sans-serif;outline:none;width:100%;';
+  textEl.replaceWith(inp);
+  inp.focus(); inp.select();
+  var committed = false;
+  function commit() {
+    if (committed) return;
+    committed = true;
+    var val = inp.value.trim();
+    onCommit(val);
+  }
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+    if (e.key === 'Escape') { inp.value = currentValue; inp.blur(); }
+  });
+}
+
 function startEditModalItem(field, idx, el) {
   var current = modalItems[field][idx];
-  var inp = document.createElement('input');
-  inp.value = current;
-  inp.style.cssText = 'flex:1;font-size:13px;color:var(--text);border:1.5px solid var(--dis);border-radius:6px;padding:2px 6px;font-family:Nunito,sans-serif;outline:none;width:100%;';
-  el.replaceWith(inp);
-  inp.focus(); inp.select();
-  function commit() {
-    var val = inp.value.trim();
+  startInlineEdit(el, current, 'var(--dis)', function(val) {
     if (val && val !== current) {
       var dup = modalItems[field].some(function(x,j){ return j!==idx && x.toLowerCase()===val.toLowerCase(); });
       if (dup) { showToast('Bu madde zaten var'); renderModalItems(); return; }
       modalItems[field][idx] = val;
     }
     renderModalItems();
-  }
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', function(e) {
-    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
-    if (e.key==='Escape') { inp.value=current; inp.blur(); }
+  });
+}
+
+function editItem(type, entryId, field, idx) {
+  var entry = localDb[type].find(function(e){ return e.id === entryId; });
+  if (!entry || !entry[field]) return;
+  var current = entry[field][idx];
+  var row = document.querySelector('#card-' + entryId + ' .item-row:nth-of-type(' + (idx+1) + ')');
+  // Daha güvenilir: tüm item-row'ları alıp index'e göre seç
+  var container = document.getElementById('card-' + entryId);
+  if (!container) return;
+  var fieldSections = container.querySelectorAll('.field-section');
+  var fieldIdx = FIELDS.indexOf(field);
+  if (fieldIdx < 0 || !fieldSections[fieldIdx]) return;
+  var rows = fieldSections[fieldIdx].querySelectorAll('.item-row');
+  if (!rows[idx]) return;
+  var textEl = rows[idx].querySelector('.i-text');
+  if (!textEl) return;
+  startInlineEdit(textEl, current, 'var(--dis)', function(val) {
+    if (val && val !== current) {
+      entry[field][idx] = val;
+      scheduleSave();
+      if (searchQuery) doSearch(searchQuery);
+    }
+    rerenderCard(type, entryId);
+  });
+}
+
+function editInfoItem(entryId, idx) {
+  var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
+  if (!entry) return;
+  var current = entry.items[idx];
+  var container = document.getElementById('icard-' + entryId);
+  if (!container) return;
+  var rows = container.querySelectorAll('.info-body-item');
+  if (!rows[idx]) return;
+  var textEl = rows[idx].querySelector('.info-body-text');
+  if (!textEl) return;
+  startInlineEdit(textEl, current, '#b7860b', function(val) {
+    if (val && val !== current) {
+      entry.items[idx] = val;
+      scheduleSave();
+    }
+    renderInfoList();
+  });
+}
+
+function startEditInfoModalItem(idx, el) {
+  var current = infoModalItems[idx];
+  startInlineEdit(el, current, '#b7860b', function(val) {
+    if (val && val !== current) { infoModalItems[idx] = val; }
+    renderInfoModalItems();
   });
 }
 
@@ -906,22 +992,23 @@ function saveModal() {
   if (!title) { showToast('Başlık gir'); document.getElementById('m-title').focus(); return; }
   const btn = document.getElementById('modalSaveBtn');
   btn.disabled = true;
-  if (editingId) {
-    const idx = localDb[modalType].findIndex(function(e){ return e.id === editingId; });
-    if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
-  } else {
-    if (localDb[modalType].find(function(e){ return e.title.toLowerCase() === title.toLowerCase(); })) {
-      showToast('Bu kayıt zaten var'); btn.disabled = false; return;
+  try {
+    if (editingId) {
+      const idx = localDb[modalType].findIndex(function(e){ return e.id === editingId; });
+      if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
+    } else {
+      if (localDb[modalType].find(function(e){ return e.title.toLowerCase() === title.toLowerCase(); })) {
+        showToast('Bu kayıt zaten var'); return;
+      }
+      localDb[modalType].unshift({ id: crypto.randomUUID(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
     }
-    localDb[modalType].unshift({ id: Date.now().toString(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
+    scheduleSave();
+    closeModal();
+    renderList(modalType);
+    showToast(editingId ? '✓ Güncellendi' : '✓ Eklendi');
+  } finally {
+    btn.disabled = false;
   }
-  scheduleSave();
-  // Pool'u kapat kapatmadan önce güncelle (closeModal editingId'yi sıfırlar)
-  FIELDS.forEach(function(f){ modalItems[f].forEach(function(v){ addToPool(f,v); }); });
-  closeModal();
-  renderList(modalType);
-  btn.disabled = false;
-  showToast(editingId ? '✓ Güncellendi' : '✓ Eklendi');
 }
 
 
@@ -942,58 +1029,9 @@ function deleteEntry(type, id) {
   });
 }
 
-function editItem(type, entryId, field, idx, btn) {
-  var entry = localDb[type].find(function(e){ return e.id === entryId; });
-  if (!entry || !entry[field]) return;
-  var current = entry[field][idx];
-  var row = btn.closest('.item-row');
-  var textEl = row.querySelector('.i-text');
-  var inp = document.createElement('input');
-  inp.value = current;
-  inp.style.cssText = 'flex:1;font-size:14px;color:var(--text);border:1.5px solid var(--dis);border-radius:6px;padding:2px 8px;font-family:Nunito,sans-serif;outline:none;width:100%;';
-  textEl.replaceWith(inp);
-  inp.focus(); inp.select();
-  function commit() {
-    var val = inp.value.trim();
-    if (val && val !== current) {
-      entry[field][idx] = val;
-      scheduleSave();
-      if (searchQuery) doSearch(searchQuery);
-    }
-    rerenderCard(type, entryId);
-  }
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', function(e) {
-    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
-    if (e.key==='Escape') { inp.value=current; inp.blur(); }
-  });
-}
+// editItem, editInfoItem, startEditInfoModalItem → yukarıda startInlineEdit ile birleştirildi
 
-function editInfoItem(entryId, idx, btn) {
-  var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
-  if (!entry) return;
-  var current = entry.items[idx];
-  var row = btn.closest('.info-body-item');
-  var textEl = row.querySelector('.info-body-text');
-  var inp = document.createElement('input');
-  inp.value = current;
-  inp.style.cssText = 'flex:1;font-size:14px;color:var(--text);border:1.5px solid #b7860b;border-radius:6px;padding:2px 8px;font-family:Nunito,sans-serif;outline:none;width:100%;';
-  textEl.replaceWith(inp);
-  inp.focus(); inp.select();
-  function commit() {
-    var val = inp.value.trim();
-    if (val && val !== current) {
-      entry.items[idx] = val;
-      scheduleSave();
-    }
-    renderInfoList();
-  }
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', function(e) {
-    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
-    if (e.key==='Escape') { inp.value=current; inp.blur(); }
-  });
-}
+
 
 function toggleCard(id) {
   const c = document.getElementById('card-' + id);
@@ -1010,7 +1048,7 @@ function cardHTML(type, entry, forceOpen) {
     const items = entry[field] || [];
     const itemsHtml = items.map(function(item, i) {
       return '<div class="item-row"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span>' +
-        '<button class="i-del" title="Düzenle" onclick="editItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ',this)">✏️</button>' +
+        '<button class="i-del" title="Düzenle" onclick="editItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">✏️</button>' +
         '<button class="i-del" onclick="deleteItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">&#215;</button></div>';
     }).join('');
     return '<div class="field-section">' +
@@ -1104,15 +1142,18 @@ function goToCard(type, id) {
   document.getElementById('searchView').classList.remove('active');
   document.getElementById('mainView').classList.remove('hidden');
   switchTab(type);
-  setTimeout(function() {
-    const card = document.getElementById('card-' + id);
-    if (!card) return;
-    card.classList.add('open');
-    card.scrollIntoView({ behavior:'smooth', block:'center' });
-    const color = type==='disease'?'var(--dis)':type==='finding'?'var(--fin)':'var(--sym)';
-    card.style.boxShadow = '0 0 0 3px ' + color;
-    setTimeout(function(){ card.style.boxShadow = ''; }, 1800);
-  }, 80);
+  // requestAnimationFrame ile DOM güncellemesinin tamamlanmasını bekle
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      const card = document.getElementById('card-' + id);
+      if (!card) return;
+      card.classList.add('open');
+      card.scrollIntoView({ behavior:'smooth', block:'center' });
+      const color = type==='disease'?'var(--dis)':type==='finding'?'var(--fin)':'var(--sym)';
+      card.style.boxShadow = '0 0 0 3px ' + color;
+      setTimeout(function(){ card.style.boxShadow = ''; }, 1800);
+    });
+  });
 }
 
 // ── EXPORT / IMPORT / CLEAR ──
@@ -1138,7 +1179,7 @@ function importData(e) {
         var ids = new Set(localDb[type].map(function(e){ return e.id; }));
         imp[type].forEach(function(entry){
           if (!entry.id || !/^[a-zA-Z0-9_-]+$/.test(String(entry.id))) return;
-          if (typeof entry.title !== 'string' || !entry.title.trim()) return;
+          if (typeof entry.title !== 'string' || !entry.title.trim() || entry.title.trim().length > 200) return;
           if (ids.has(entry.id)) return;
           // Sadece bilinen alanları al, ham objeyi kopyalama
           var clean;
@@ -1169,9 +1210,19 @@ function importData(e) {
 }
 
 function clearAllData() {
-  showConfirm('Tüm veriler silinecek. Bu işlem geri alınamaz. Emin misin?', function() {
+  showConfirm('Tüm veriler silinecek. Bu işlem geri alınamaz. Emin misin?', async function() {
     localDb = emptyDb();
-    scheduleSave(); renderAll(); closeSettings();
+    saveLocal();
+    // Firebase belgesini de sil (boş veriyle üzerine yazmak yerine)
+    if (currentUser && db) {
+      try {
+        await userDocRef().delete();
+      } catch(e) {
+        console.error('Firebase silme hatası:', e);
+      }
+    }
+    renderAll();
+    closeSettings();
     showToast('🗑 Tüm veriler silindi');
   });
 }
@@ -1228,24 +1279,7 @@ function renderInfoModalItems() {
   }).join('');
 }
 
-function startEditInfoModalItem(idx, el) {
-  var current = infoModalItems[idx];
-  var inp = document.createElement('input');
-  inp.value = current;
-  inp.style.cssText = 'flex:1;font-size:13px;color:var(--text);border:1.5px solid #b7860b;border-radius:6px;padding:2px 6px;font-family:Nunito,sans-serif;outline:none;width:100%;';
-  el.replaceWith(inp);
-  inp.focus(); inp.select();
-  function commit() {
-    var val = inp.value.trim();
-    if (val && val !== current) { infoModalItems[idx] = val; }
-    renderInfoModalItems();
-  }
-  inp.addEventListener('blur', commit);
-  inp.addEventListener('keydown', function(e) {
-    if (e.key==='Enter') { e.preventDefault(); inp.blur(); }
-    if (e.key==='Escape') { inp.value=current; inp.blur(); }
-  });
-}
+
 
 function saveInfoModal() {
   var title = document.getElementById('im-title').value.trim();
@@ -1255,11 +1289,9 @@ function saveInfoModal() {
     var idx = localDb.info.findIndex(function(e){ return e.id === infoEditingId; });
     if (idx > -1) localDb.info[idx] = Object.assign({}, localDb.info[idx], { title:title, items:infoModalItems.slice() });
   } else {
-    localDb.info.unshift({ id: Date.now().toString(), title:title, items:infoModalItems.slice() });
+    localDb.info.unshift({ id: crypto.randomUUID(), title:title, items:infoModalItems.slice() });
   }
   scheduleSave();
-  // info maddelerini notlar havuzuna ekle
-  infoModalItems.forEach(function(v){ addToPool('notlar', v); });
   closeInfoModal();
   renderInfoList();
   showToast(infoEditingId ? '✓ Güncellendi' : '✓ Eklendi');
@@ -1292,7 +1324,7 @@ function infoCardHTML(entry) {
     return '<div class="info-body-item">' +
       '<span class="info-body-dot"></span>' +
       '<span class="info-body-text">' + esc(item) + '</span>' +
-      '<button class="info-body-del" title="Düzenle" onclick="editInfoItem(\'' + safeId + '\',' + i + ',this)">✏️</button>' +
+      '<button class="info-body-del" title="Düzenle" onclick="editInfoItem(\'' + safeId + '\',' + i + ')">✏️</button>' +
       '<button class="info-body-del" onclick="deleteInfoItem(\'' + safeId + '\',' + i + ')">&#215;</button>' +
       '</div>';
   }).join('') || '<div style="padding:10px 16px;font-size:13px;color:var(--text3);font-style:italic;">Not yok</div>';
@@ -1323,7 +1355,6 @@ function renderInfoList() {
 }
 
 // ── POOL VIEWER ──
-var POOL_FIELD_META = FIELDS.map(function(k){ return { key:k, label:FIELD_LABELS[k], color:FIELD_COLORS[k] }; });
 
 function openPoolViewer() {
   rebuildPoolFromEntries();
@@ -1339,6 +1370,7 @@ function closePoolViewer() {
 
 function renderPoolViewer() {
   ensurePool();
+  var POOL_FIELD_META = FIELDS.map(function(k){ return { key:k, label:FIELD_LABELS[k], color:FIELD_COLORS[k] }; });
   var filter = (document.getElementById('poolViewerSearch').value || '').toLowerCase();
   var container = document.getElementById('poolViewerContent');
   container.innerHTML = POOL_FIELD_META.map(function(f) {
