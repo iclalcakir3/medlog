@@ -268,47 +268,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 .fab:active{transform:scale(.95);}
 .fab svg{width:22px;height:22px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 
-/* FAB menü */
-.fab-menu{position:fixed;bottom:90px;right:20px;z-index:250;display:flex;flex-direction:column;gap:10px;align-items:flex-end;pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s;}
-.fab-menu.open{pointer-events:auto;opacity:1;transform:translateY(0);}
-.fab-item{display:flex;align-items:center;gap:10px;cursor:pointer;background:none;border:none;padding:0;}
-.fab-item-label{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:6px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text2);white-space:nowrap;box-shadow:var(--shadow);}
-.fab-item-btn{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow);transition:transform .15s;}
-.fab-item-btn:hover{transform:scale(1.08);}
-.fab-item-btn svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 
-/* ── İSTATİSTİK MODALİ ── */
-.stats-overlay{position:fixed;inset:0;background:rgba(26,23,20,.45);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);}
-.stats-overlay.open{display:flex;}
-@media(min-width:600px){.stats-overlay{align-items:center;}}
-.stats-modal{background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 -4px 32px rgba(0,0,0,.12);animation:slideUp .22s ease;}
-@media(min-width:600px){.stats-modal{border-radius:var(--radius);max-height:80vh;}}
-.stats-head{padding:18px 20px 14px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.stats-head-title{font-family:'Lora',serif;font-size:16px;font-weight:600;flex:1;}
-.stats-close{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;color:var(--text3);font-size:14px;transition:all .15s;}
-.stats-close:hover{background:var(--bg);}
-.stats-body{flex:1;overflow-y:auto;padding:20px;}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.stat-card{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;}
-.stat-card-val{font-size:28px;font-weight:800;font-family:'Nunito',sans-serif;line-height:1;}
-.stat-card-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:4px;}
-.stat-card.dis .stat-card-val{color:var(--dis);}
-.stat-card.fin .stat-card-val{color:var(--fin);}
-.stat-card.sym .stat-card-val{color:var(--sym);}
-.stat-card.inf .stat-card-val{color:#b7860b;}
-.stat-card.total .stat-card-val{color:var(--text);}
-.stats-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:10px;margin-top:4px;}
-.stats-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.stats-bar-label{font-size:12px;color:var(--text2);width:70px;flex-shrink:0;font-weight:700;}
-.stats-bar-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
-.stats-bar-fill{height:100%;border-radius:4px;transition:width .4s ease;}
-.stats-bar-num{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;width:30px;text-align:right;flex-shrink:0;}
-.stats-top-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:8px;margin-top:16px;}
-.stats-top-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);}
-.stats-top-item:last-child{border-bottom:none;}
-.stats-top-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.stats-top-name{font-size:13px;color:var(--text2);flex:1;font-family:'Lora',serif;font-weight:600;}
-.stats-top-count{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
 /* ── SINAV ── */
 .exam-screen{position:fixed;inset:0;z-index:400;background:var(--bg);display:none;flex-direction:column;}
 .exam-screen.open{display:flex;}
@@ -489,15 +449,6 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
   <div class="exam-body" id="examBody"></div>
 </div>
 
-<!-- FAB MENÜ -->
-<div class="fab-menu" id="fabMenu">
-  <div class="fab-item" onclick="openQuickNote()">
-    <span class="fab-item-label">Hızlı not</span>
-    <button class="fab-item-btn" style="background:var(--sym);">
-      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    </button>
-  </div>
-</div>
 
 <button class="fab" id="fabBtn" onclick="openQuickNote()" title="Hızlı not">
   <svg viewBox="0 0 24 24" id="fabIcon" width="22" height="22" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -1291,6 +1242,7 @@ function renderList(type) {
 
 function renderAll() {
   ['disease','finding','symptom'].forEach(renderList);
+  renderInfoList();
 }
 
 // ── SEARCH ──
@@ -1313,8 +1265,16 @@ function doSearch(q) {
         if (matched.length) { fieldMatches[f] = matched; anyMatch = true; }
         else if (titleMatch) { fieldMatches[f] = entry[f]||[]; }
       });
-      if (titleMatch || anyMatch) results.push({ type:type, entry:entry, fieldMatches:fieldMatches });
+      if (titleMatch || anyMatch) results.push({ type:type, entry:entry, fieldMatches:fieldMatches, isInfo:false });
     });
+  });
+  // Bilgi kartlarını da ara
+  (localDb.info||[]).forEach(function(entry) {
+    const titleMatch = entry.title.toLowerCase().includes(ql);
+    const matched = (entry.items||[]).filter(function(i){ return i.toLowerCase().includes(ql); });
+    if (titleMatch || matched.length) {
+      results.push({ type:'info', entry:entry, fieldMatches:{ items: matched.length ? matched : (titleMatch ? entry.items : []) }, isInfo:true });
+    }
   });
 
   document.getElementById('searchStats').innerHTML = '"<strong>' + esc(q) + '</strong>" için <strong>' + results.length + '</strong> sonuç';
@@ -1322,14 +1282,21 @@ function doSearch(q) {
   if (!results.length) { container.innerHTML = '<div class="empty-state"><div class="ei">🔍</div><h3>Sonuç bulunamadı</h3><p>"' + esc(q) + '" ile eşleşen kayıt yok.</p></div>'; return; }
 
   container.innerHTML = results.map(function(r) {
-    const fh = FIELDS.map(function(field) {
-      const items = r.fieldMatches[field]||[];
-      if (!items.length) return '';
-      return '<div class="sr-field"><div class="sr-field-label ' + field + '" style="color:' + FIELD_COLORS[field] + '">' + FIELD_LABELS[field] + '</div>' +
-        items.map(function(i){ return '<div class="sr-item">• ' + hl(i,q) + '</div>'; }).join('') + '</div>';
-    }).join('');
     const safeType = esc(r.type);
     const safeId = esc(r.entry.id);
+    var fh;
+    if (r.isInfo) {
+      const items = r.fieldMatches.items || [];
+      fh = items.length ? '<div class="sr-field"><div class="sr-field-label" style="color:#b7860b">Notlar</div>' +
+        items.map(function(i){ return '<div class="sr-item">• ' + hl(i,q) + '</div>'; }).join('') + '</div>' : '';
+    } else {
+      fh = FIELDS.map(function(field) {
+        const items = r.fieldMatches[field]||[];
+        if (!items.length) return '';
+        return '<div class="sr-field"><div class="sr-field-label ' + field + '" style="color:' + FIELD_COLORS[field] + '">' + FIELD_LABELS[field] + '</div>' +
+          items.map(function(i){ return '<div class="sr-item">• ' + hl(i,q) + '</div>'; }).join('') + '</div>';
+      }).join('');
+    }
     return '<div class="search-result" onclick="goToCard(\'' + safeType + '\',\'' + safeId + '\')">' +
       '<div class="sr-header"><span class="sr-badge ' + safeType + '">' + LABELS[r.type] + '</span><span class="sr-title">' + hl(r.entry.title,q) + '</span><span class="sr-goto">Git →</span></div>' +
       (fh || '<div class="sr-field" style="color:var(--text3);font-size:13px;font-style:italic">Başlıkta eşleşme</div>') + '</div>';
@@ -1342,14 +1309,14 @@ function goToCard(type, id) {
   document.getElementById('searchView').classList.remove('active');
   document.getElementById('mainView').classList.remove('hidden');
   switchTab(type);
-  // requestAnimationFrame ile DOM güncellemesinin tamamlanmasını bekle
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
-      const card = document.getElementById('card-' + id);
+      var cardId = type === 'info' ? 'icard-' + id : 'card-' + id;
+      var card = document.getElementById(cardId);
       if (!card) return;
       card.classList.add('open');
       card.scrollIntoView({ behavior:'smooth', block:'center' });
-      const color = type==='disease'?'var(--dis)':type==='finding'?'var(--fin)':'var(--sym)';
+      var color = type==='disease'?'var(--dis)':type==='finding'?'var(--fin)':type==='symptom'?'var(--sym)':'#b7860b';
       card.style.boxShadow = '0 0 0 3px ' + color;
       setTimeout(function(){ card.style.boxShadow = ''; }, 1800);
     });
@@ -1518,7 +1485,6 @@ function toggleInfoCard(id) {
 }
 
 function infoCardHTML(entry) {
-  var safeId = esc(entry.id);
   var wasOpen = (function(){ var c = document.getElementById('icard-' + entry.id); return c && c.classList.contains('open'); })();
   var itemsHtml = (entry.items||[]).map(function(item, i) {
     return '<div class="info-body-item">' +
@@ -1754,23 +1720,9 @@ function showToast(msg) {
 })();
 
 // ── FAB ──
-var fabOpen = false;
-function toggleFabMenu() {
-  fabOpen = !fabOpen;
-  document.getElementById('fabMenu').classList.toggle('open', fabOpen);
-  var icon = document.getElementById('fabIcon');
-  icon.innerHTML = fabOpen
-    ? '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'
-    : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
-}
-function closeFabMenu() {
-  fabOpen = false;
-  document.getElementById('fabMenu').classList.remove('open');
-  var icon = document.getElementById('fabIcon');
-  icon.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
-}
+function closeFabMenu() { /* fab menü kaldırıldı, uyumluluk için boş bırakıldı */ }
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('#fabBtn') && !e.target.closest('#fabMenu')) closeFabMenu();
+  if (!e.target.closest('#fabBtn')) closeFabMenu();
 });
 
 // ── HIZLI NOT ──
