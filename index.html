@@ -593,11 +593,10 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         </div>
         <div class="s-row-label">Format</div>
         <div style="display:flex;gap:4px;margin-bottom:10px;">
-          <button class="s-chip" id="efmt-both" onclick="setExportFormat('both')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">📦 Hepsi</button>
-          <button class="s-chip active" id="efmt-pdf" onclick="setExportFormat('pdf')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">📄 PDF</button>
-          <button class="s-chip" id="efmt-doc" onclick="setExportFormat('doc')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">📝 Word</button>
-          <button class="s-chip" id="efmt-txt" onclick="setExportFormat('txt')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">🔤 TXT</button>
-          <button class="s-chip" id="efmt-csv" onclick="setExportFormat('csv')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">📊 CSV</button>
+          <button class="s-chip" id="efmt-both" onclick="setExportFormat('both')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Hepsi</button>
+          <button class="s-chip active" id="efmt-pdf" onclick="setExportFormat('pdf')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">PDF</button>
+          <button class="s-chip" id="efmt-doc" onclick="setExportFormat('doc')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Word</button>
+          <button class="s-chip" id="efmt-txt" onclick="setExportFormat('txt')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">TXT</button>
         </div>
         <button class="s-btn" onclick="doExport()" style="background:var(--dis);color:white;border-color:var(--dis);">İndir</button>
       </div>
@@ -1693,8 +1692,8 @@ function buildExportData() {
 }
 
 function buildPrintHTML(sections) {
-  var fieldLabels = { tanim:'Tanım', sorgu:'Sorgu', bulgu:'Bulgu & Belirti', tetkik:'Tetkik', tedavi:'Tedavi', notlar:'Notlar' };
-  var fieldColors = { tanim:'#666', sorgu:'#8e44ad', bulgu:'#1a7a6e', tetkik:'#d35400', tedavi:'#1a6fa8', notlar:'#1a7a6e' };
+  var fieldLabels = { tanim:'Tanım', sorgu:'Sorgu', tetkik:'Tetkik', notlar:'Notlar' };
+  var fieldColors = { tanim:'#666', sorgu:'#8e44ad', tetkik:'#d35400', notlar:'#1a7a6e' };
   var typeColors = { disease:'#c0392b', finding:'#1a6fa8', symptom:'#1a7a6e', info:'#b7860b' };
 
   var html = '<div style="font-family:Georgia,serif;max-width:700px;margin:0 auto;color:#1a1714;">';
@@ -1717,14 +1716,32 @@ function buildPrintHTML(sections) {
           ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar']
           : ['tanim','sorgu','tetkik','notlar'];
         fields.forEach(function(f) {
+          if (f === 'bulgu') {
+            var bulgu = migrateBulgu(entry.bulgu);
+            if (!bulgu.length) return;
+            var hasItems = bulgu.some(function(g){ return g.maddeler && g.maddeler.length; });
+            if (!hasItems) return;
+            html += '<div style="margin-bottom:6px;"><span style="font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;color:#1a7a6e;">Bulgu & Belirti</span>';
+            bulgu.forEach(function(grup) {
+              if (!grup.maddeler.length) return;
+              if (grup.baslik) html += '<div style="font-size:13px;color:#1a7a6e;margin:4px 0 2px;">' + grup.baslik + '</div>';
+              html += '<ul style="margin:2px 0 4px ' + (grup.baslik ? '28px' : '18px') + ';padding:0;">';
+              grup.maddeler.forEach(function(m){ html += '<li style="font-size:13px;color:#5c524a;margin-bottom:2px;">' + m + '</li>'; });
+              html += '</ul>';
+            });
+            html += '</div>';
+            return;
+          }
           if (f === 'tedavi') {
             var tedavi = migrateTedavi(entry.tedavi);
             if (!tedavi.length) return;
+            var hasItems = tedavi.some(function(g){ return g.maddeler && g.maddeler.length; });
+            if (!hasItems) return;
             html += '<div style="margin-bottom:6px;"><span style="font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;color:#1a6fa8;">Tedavi</span>';
             tedavi.forEach(function(grup) {
               if (!grup.maddeler.length) return;
-              if (grup.baslik) html += '<div style="font-size:11px;font-weight:bold;color:#1a6fa8;margin:4px 0 2px;">' + grup.baslik + '</div>';
-              html += '<ul style="margin:2px 0 4px 18px;padding:0;">';
+              if (grup.baslik) html += '<div style="font-size:13px;color:#1a6fa8;margin:4px 0 2px;">' + grup.baslik + '</div>';
+              html += '<ul style="margin:2px 0 4px ' + (grup.baslik ? '28px' : '18px') + ';padding:0;">';
               grup.maddeler.forEach(function(m){ html += '<li style="font-size:13px;color:#5c524a;margin-bottom:2px;">' + m + '</li>'; });
               html += '</ul>';
             });
@@ -1753,28 +1770,33 @@ function doExport() {
   if (exportFormat === 'pdf') { exportPDF(sections); }
   else if (exportFormat === 'doc') { exportWord(sections); }
   else if (exportFormat === 'txt') { exportTXT(sections); }
-  else if (exportFormat === 'csv') { exportCSV(sections); }
   else if (exportFormat === 'both') {
     exportPDF(sections);
-    setTimeout(function(){ exportWord(sections); }, 800);
+    setTimeout(function(){ exportWord(sections); }, 600);
     setTimeout(function(){ exportTXT(sections); }, 1200);
-    setTimeout(function(){ exportCSV(sections); }, 1600);
   }
 }
 
 function exportPDF(sections) {
-  var printArea = document.getElementById('printArea');
-  printArea.innerHTML = buildPrintHTML(sections);
-  printArea.style.display = 'block';
-  // Ayarlar panelini kapat, sonra yazdır
-  closeSettings();
-  setTimeout(function(){
-    window.print();
-    setTimeout(function(){
-      printArea.style.display = 'none';
-      printArea.innerHTML = '';
-    }, 1500);
-  }, 350);
+  var content = buildPrintHTML(sections);
+  var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>MedLog</title><style>' +
+    'body{font-family:Georgia,serif;margin:40px;background:#fff;color:#1a1714;}' +
+    'h1{font-size:24px;border-bottom:2px solid #c0392b;padding-bottom:8px;margin-bottom:24px;}' +
+    'h2{font-size:18px;margin:28px 0 14px;border-bottom:1px solid #eee;padding-bottom:6px;}' +
+    'h3{font-size:15px;margin:0 0 8px;}' +
+    'ul{margin:3px 0 0 18px;padding:0;}' +
+    'li{font-size:13px;color:#5c524a;margin-bottom:2px;}' +
+    '@media print{body{margin:20px;}@page{margin:2cm;}}' +
+    '</style></head><body>' + content +
+    '<script>window.onload=function(){window.print();}<\/script>' +
+    '</body></html>';
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'medlog_' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  showToast('📄 PDF dosyası indirildi — tarayıcıda açıp yazdır');
 }
 
 function exportWord(sections) {
