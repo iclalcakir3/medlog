@@ -860,7 +860,7 @@ async function syncFromFirebase() {
     const snap = await userDocRef().get();
     if (snap.exists) {
       const remote = snap.data();
-      ['disease','finding','symptom'].forEach(type => {
+      ['disease','finding','symptom','info'].forEach(type => {
         const remoteIds = new Set((remote[type]||[]).map(e => e.id));
         const localOnly = (localDb[type]||[]).filter(e => !remoteIds.has(e.id));
         localDb[type] = [...(remote[type]||[]), ...localOnly];
