@@ -167,7 +167,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .field-section:last-child{border-bottom:none;}
 .field-header{padding:10px 16px 6px;}
 .field-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;font-family:'DM Mono',monospace;}
-.item-row{display:flex;align-items:flex-start;gap:8px;padding:6px 16px 6px 32px;transition:background .15s;}
+.item-row{display:flex;align-items:flex-start;gap:8px;padding:7px 16px 7px 32px;transition:background .15s;}
 .item-row:hover{background:var(--surface2);}
 .i-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:7px;opacity:.4;background:var(--text2);}
 .i-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
@@ -192,7 +192,29 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .mfield-tetkik label{color:#d35400;}
 .mfield-notlar label{color:#1a7a6e;}
 .mfield-tedavi label{color:#1a6fa8;}
+.tedavi-grup{border:1.5px solid #a8d0ed;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;background:#f5faff;}
+.tedavi-grup-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tedavi-grup-title{flex:1;border:none;border-bottom:1.5px solid #a8d0ed;background:transparent;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1a6fa8;padding:2px 4px;outline:none;}
+.tedavi-grup-title::placeholder{color:#a8d0ed;font-weight:400;}
+.tedavi-grup-del{background:none;border:none;cursor:pointer;color:#a8d0ed;font-size:16px;padding:0;line-height:1;transition:color .15s;}
+.tedavi-grup-del:hover{color:var(--dis);}
+.tedavi-madde-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.tedavi-madde-text{flex:1;font-size:13px;color:var(--text2);}
+.tedavi-madde-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0;transition:color .15s;}
+.tedavi-madde-del:hover{color:var(--dis);}
+.tedavi-madde-input{display:flex;gap:6px;margin-top:6px;margin-left:32px;}
+.tedavi-madde-input input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;font-size:16px;}
+.tedavi-madde-input input:focus{border-color:#1a6fa8;}
 .mfield-bulgu label{color:#1a7a6e;}
+.bulgu-grup{border:1.5px solid #a8d8d2;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;background:#f0faf9;}
+.bulgu-grup-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bulgu-grup-title{flex:1;border:none;border-bottom:1.5px solid #a8d8d2;background:transparent;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1a7a6e;padding:2px 4px;outline:none;}
+.bulgu-grup-title::placeholder{color:#a8d8d2;font-weight:400;}
+.bulgu-grup-del{background:none;border:none;cursor:pointer;color:#a8d8d2;font-size:16px;padding:0;line-height:1;transition:color .15s;}
+.bulgu-grup-del:hover{color:var(--dis);}
+.bulgu-madde-input{display:flex;gap:6px;margin-top:6px;margin-left:32px;}
+.bulgu-madde-input input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface);outline:none;}
+.bulgu-madde-input input:focus{border-color:#1a7a6e;}
 .mfield input, .mfield-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s,box-shadow .2s;}
 .mfield input:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
 .mfield input::placeholder{color:var(--text3);}
@@ -272,9 +294,10 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 .s-row-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:6px;}
 
 @media print {
-  body > *:not(#printArea) { display: none !important; }
-  #printArea { display: block !important; }
-  @page { margin: 20mm; }
+  body * { visibility: hidden !important; }
+  #printArea, #printArea * { visibility: visible !important; }
+  #printArea { position: fixed !important; top: 0; left: 0; width: 100%; display: block !important; }
+  @page { margin: 20mm; size: A4; }
 }
 #printArea { display: none; }
 .fab{position:fixed;bottom:28px;right:20px;z-index:250;width:52px;height:52px;border-radius:50%;background:var(--dis);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(192,57,43,.35);transition:transform .15s,box-shadow .15s;}
@@ -635,19 +658,9 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         </div>
       </div>
       <div class="mfield mfield-bulgu">
-        <label>Bulgu & Belirti <span class="pool-badge" id="pool-badge-bulgu"></span></label>
+        <label style="color:#1a7a6e">Bulgu & Belirti</label>
         <div id="items-bulgu"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <div class="ac-wrap" style="flex:1">
-            <input id="m-bulgu-new" type="text" placeholder="Bulgu veya belirti ekle… (Enter)" autocomplete="off"
-              oninput="acInput('bulgu')"
-              onkeydown="acKeydown(event,'bulgu')"
-              onfocus="acInput('bulgu')"
-              onblur="acBlur('bulgu')">
-            <div class="ac-dropdown" id="ac-bulgu"></div>
-          </div>
-          <button onclick="addModalItem('bulgu')" style="background:none;border:none;cursor:pointer;color:#1a7a6e;font-size:20px">+</button>
-        </div>
+        <button onclick="addBulguGrup()" style="margin-top:8px;background:none;border:1.5px dashed #1a7a6e;border-radius:var(--radius-sm);padding:6px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1a7a6e;cursor:pointer;width:100%;">+ Başlık ekle</button>
       </div>
       <div class="mfield mfield-tetkik">
         <label>Tetkik <span class="pool-badge" id="pool-badge-tetkik"></span></label>
@@ -665,19 +678,9 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         </div>
       </div>
       <div class="mfield mfield-tedavi">
-        <label>Tedavi <span class="pool-badge" id="pool-badge-tedavi"></span></label>
+        <label style="color:#1a6fa8">Tedavi</label>
         <div id="items-tedavi"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <div class="ac-wrap" style="flex:1">
-            <input id="m-tedavi-new" type="text" placeholder="Tedavi maddesi ekle… (Enter)" autocomplete="off"
-              oninput="acInput('tedavi')"
-              onkeydown="acKeydown(event,'tedavi')"
-              onfocus="acInput('tedavi')"
-              onblur="acBlur('tedavi')">
-            <div class="ac-dropdown" id="ac-tedavi"></div>
-          </div>
-          <button onclick="addModalItem('tedavi')" style="background:none;border:none;cursor:pointer;color:#1a6fa8;font-size:20px">+</button>
-        </div>
+        <button onclick="addTedaviGrup()" style="margin-top:8px;background:none;border:1.5px dashed #1a6fa8;border-radius:var(--radius-sm);padding:6px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#1a6fa8;cursor:pointer;width:100%;">+ Başlık ekle</button>
       </div>
       <div class="mfield mfield-notlar">
         <label>Notlar <span class="pool-badge" id="pool-badge-notlar"></span></label>
@@ -778,7 +781,8 @@ let localDb = loadLocal();
 let currentUser = null;
 let saveTimeout = null;
 let modalType = 'disease';
-let modalItems = { tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] };
+var modalItems = { tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] };
+// tedavi formatı: [{ baslik: string, maddeler: string[] }, ...]
 let editingId = null;
 let searchQuery = '';
 
@@ -801,9 +805,23 @@ function rebuildPoolFromEntries() {
     var seen = new Map();
     ['disease','finding','symptom'].forEach(function(type) {
       (localDb[type]||[]).forEach(function(entry) {
-        (entry[field]||[]).forEach(function(item) {
-          if (item && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
-        });
+        if (field === 'tedavi') {
+          migrateTedavi(entry.tedavi).forEach(function(g) {
+            (g.maddeler||[]).forEach(function(item) {
+              if (item && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
+            });
+          });
+        } else if (field === 'bulgu') {
+          migrateBulgu(entry.bulgu).forEach(function(g) {
+            (g.maddeler||[]).forEach(function(item) {
+              if (item && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
+            });
+          });
+        } else {
+          (entry[field]||[]).forEach(function(item) {
+            if (item && typeof item === 'string' && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
+          });
+        }
       });
     });
     if (field === 'notlar') {
@@ -966,6 +984,12 @@ function switchTab(tab) {
 }
 
 // ── MODAL ──
+function migrateTedavi(raw) {
+  if (!raw || !raw.length) return [];
+  if (typeof raw[0] === 'object' && raw[0] !== null && 'maddeler' in raw[0]) return raw.map(function(g){ return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() }; });
+  return [{ baslik: '', maddeler: raw.slice() }];
+}
+
 function openModal(type, entryId) {
   modalType = type;
   editingId = entryId || null;
@@ -974,20 +998,22 @@ function openModal(type, entryId) {
     const entry = localDb[type].find(function(e){ return e.id === entryId; });
     if (entry) {
       document.getElementById('m-title').value = entry.title;
-      FIELDS.forEach(function(f){ modalItems[f] = (entry[f]||[]).slice(); });
+      ['tanim','sorgu','tetkik','notlar'].forEach(function(f){ modalItems[f] = (entry[f]||[]).slice(); });
+      modalItems.tedavi = migrateTedavi(entry.tedavi);
+      modalItems.bulgu = migrateBulgu(entry.bulgu);
       document.getElementById('modalTitle').textContent = entry.title + ' — Düzenle';
     }
   } else {
     document.getElementById('m-title').value = '';
-    FIELDS.forEach(function(f){ modalItems[f] = []; });
+    ['tanim','sorgu','tetkik','notlar'].forEach(function(f){ modalItems[f] = []; });
+    modalItems.tedavi = [];
+    modalItems.bulgu = [];
     document.getElementById('modalTitle').textContent = 'Yeni ' + LABELS[type];
   }
-  // Tedavi ve Bulgu & Belirti alanlarını sadece hastalık için göster
   var tedaviField = document.querySelector('.mfield-tedavi');
   var bulguField = document.querySelector('.mfield-bulgu');
   if (tedaviField) tedaviField.style.display = type === 'disease' ? '' : 'none';
   if (bulguField) bulguField.style.display = type === 'disease' ? '' : 'none';
-
   document.getElementById('modalSaveBtn').className = 'btn-save ' + type;
   renderModalItems();
   updatePoolBadges();
@@ -1015,7 +1041,158 @@ function addModalItem(field, value) {
   inp.focus();
 }
 
-// ── AUTOCOMPLETE ──
+// ── BULGU & BELİRTİ GRUP ──
+function migrateBulgu(raw) {
+  if (!raw || !raw.length) return [];
+  if (typeof raw[0] === 'object' && raw[0] !== null && 'maddeler' in raw[0]) return raw.map(function(g){ return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() }; });
+  return [{ baslik: '', maddeler: raw.slice() }];
+}
+
+function updateBulguBaslik(gi, val) {
+  if (modalItems.bulgu[gi]) modalItems.bulgu[gi].baslik = val;
+}
+
+function addBulguGrup() {
+  modalItems.bulgu.push({ baslik: '', maddeler: [] });
+  renderBulguGruplari();
+  setTimeout(function(){
+    var inputs = document.querySelectorAll('.bulgu-grup-title');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
+function deleteBulguGrup(gi) {
+  modalItems.bulgu.splice(gi, 1);
+  renderBulguGruplari();
+}
+
+function addBulguMadde(gi) {
+  var inp = document.getElementById('bulgu-inp-' + gi);
+  if (!inp) return;
+  var val = inp.value.trim();
+  if (!val) return;
+  modalItems.bulgu[gi].maddeler.push(val);
+  inp.value = '';
+  renderBulguGruplari();
+  setTimeout(function(){ var i = document.getElementById('bulgu-inp-' + gi); if(i) i.focus(); }, 50);
+}
+
+function deleteBulguMadde(gi, mi) {
+  modalItems.bulgu[gi].maddeler.splice(mi, 1);
+  renderBulguGruplari();
+}
+
+function editBulguMadde(gi, mi, el) {
+  var current = modalItems.bulgu[gi].maddeler[mi];
+  startInlineEdit(el, current, '#1a7a6e', function(val) {
+    if (val) modalItems.bulgu[gi].maddeler[mi] = val;
+    renderBulguGruplari();
+  });
+}
+
+function renderBulguGruplari() {
+  var container = document.getElementById('items-bulgu');
+  if (!container) return;
+  if (!modalItems.bulgu.length) { container.innerHTML = ''; return; }
+  container.innerHTML = modalItems.bulgu.map(function(grup, gi) {
+    var maddeHTML = grup.maddeler.map(function(m, mi) {
+      return '<div class="tedavi-madde-row">' +
+        '<span class="i-dot"></span>' +
+        '<span class="tedavi-madde-text" onclick="editBulguMadde(' + gi + ',' + mi + ',this)">' + esc(m) + '</span>' +
+        '<button class="tedavi-madde-del" onclick="deleteBulguMadde(' + gi + ',' + mi + ')">&#215;</button>' +
+        '</div>';
+    }).join('');
+    return '<div class="bulgu-grup">' +
+      '<div class="bulgu-grup-header">' +
+        '<input class="bulgu-grup-title" type="text" placeholder="Başlık (örn. Kardiyak Bulgular)" value="' + esc(grup.baslik) + '" ' +
+          'oninput="updateBulguBaslik(' + gi + ',this.value)" ' +
+          'onkeydown="if(event.key===\'Enter\'){event.preventDefault();var i=document.getElementById(\'bulgu-inp-' + gi + '\');if(i)i.focus();}">' +
+        '<button class="bulgu-grup-del" onclick="deleteBulguGrup(' + gi + ')" title="Grubu sil">&#215;</button>' +
+      '</div>' +
+      maddeHTML +
+      '<div class="bulgu-madde-input">' +
+        '<input id="bulgu-inp-' + gi + '" type="text" placeholder="Madde ekle… (Enter)" ' +
+          'onkeydown="if(event.key===\'Enter\'){event.preventDefault();addBulguMadde(' + gi + ');}">' +
+        '<button onclick="addBulguMadde(' + gi + ')" style="background:none;border:none;cursor:pointer;color:#1a7a6e;font-size:20px;line-height:1;">+</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── TEDAVİ GRUP ──
+function addTedaviGrup() {
+  modalItems.tedavi.push({ baslik: '', maddeler: [] });
+  renderTedaviGruplari();
+  // Yeni grubun başlık inputuna focus
+  setTimeout(function(){
+    var inputs = document.querySelectorAll('.tedavi-grup-title');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
+function deleteTedaviGrup(gi) {
+  modalItems.tedavi.splice(gi, 1);
+  renderTedaviGruplari();
+}
+
+function addTedaviMadde(gi) {
+  var inp = document.getElementById('tedavi-inp-' + gi);
+  if (!inp) return;
+  var val = inp.value.trim();
+  if (!val) return;
+  modalItems.tedavi[gi].maddeler.push(val);
+  inp.value = '';
+  renderTedaviGruplari();
+  setTimeout(function(){ var i = document.getElementById('tedavi-inp-' + gi); if(i) i.focus(); }, 50);
+}
+
+function deleteTedaviMadde(gi, mi) {
+  modalItems.tedavi[gi].maddeler.splice(mi, 1);
+  renderTedaviGruplari();
+}
+
+function editTedaviMadde(gi, mi, el) {
+  var current = modalItems.tedavi[gi].maddeler[mi];
+  startInlineEdit(el, current, '#1a6fa8', function(val) {
+    if (val) modalItems.tedavi[gi].maddeler[mi] = val;
+    renderTedaviGruplari();
+  });
+}
+
+function updateTedaviBaslik(gi, val) {
+  if (modalItems.tedavi[gi]) modalItems.tedavi[gi].baslik = val;
+}
+
+function renderTedaviGruplari() {
+  var container = document.getElementById('items-tedavi');
+  if (!container) return;
+  if (!modalItems.tedavi.length) { container.innerHTML = ''; return; }
+  container.innerHTML = modalItems.tedavi.map(function(grup, gi) {
+    var maddeHTML = grup.maddeler.map(function(m, mi) {
+      return '<div class="tedavi-madde-row">' +
+        '<span class="i-dot"></span>' +
+        '<span class="tedavi-madde-text" onclick="editTedaviMadde(' + gi + ',' + mi + ',this)">' + esc(m) + '</span>' +
+        '<button class="tedavi-madde-del" onclick="deleteTedaviMadde(' + gi + ',' + mi + ')">&#215;</button>' +
+        '</div>';
+    }).join('');
+    return '<div class="tedavi-grup">' +
+      '<div class="tedavi-grup-header">' +
+        '<input class="tedavi-grup-title" type="text" placeholder="Başlık (örn. İlaç Tedavisi)" value="' + esc(grup.baslik) + '" ' +
+          'oninput="updateTedaviBaslik(' + gi + ',this.value)" ' +
+          'onkeydown="if(event.key===\'Enter\'){event.preventDefault();var i=document.getElementById(\'tedavi-inp-' + gi + '\');if(i)i.focus();}">' +
+        '<button class="tedavi-grup-del" onclick="deleteTedaviGrup(' + gi + ')" title="Grubu sil">&#215;</button>' +
+      '</div>' +
+      maddeHTML +
+      '<div class="tedavi-madde-input">' +
+        '<input id="tedavi-inp-' + gi + '" type="text" placeholder="Madde ekle… (Enter)" ' +
+          'onkeydown="if(event.key===\'Enter\'){event.preventDefault();addTedaviMadde(' + gi + ');}">' +
+        '<button onclick="addTedaviMadde(' + gi + ')" style="background:none;border:none;cursor:pointer;color:#1a6fa8;font-size:20px;line-height:1;">+</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── MODAL ITEMS RENDER ──
 var acFocusIdx = { tanim:-1, sorgu:-1, bulgu:-1, tetkik:-1, tedavi:-1, notlar:-1 };
 
 function acGetSuggestions(field, query) {
@@ -1120,7 +1297,11 @@ function removeModalItem(field, idx) {
 
 function renderModalItems() {
   FIELDS.forEach(function(field) {
-    document.getElementById('items-' + field).innerHTML = modalItems[field].map(function(item, i) {
+    if (field === 'tedavi') { renderTedaviGruplari(); return; }
+    if (field === 'bulgu') { renderBulguGruplari(); return; }
+    var container = document.getElementById('items-' + field);
+    if (!container) return;
+    container.innerHTML = modalItems[field].map(function(item, i) {
       return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">' +
         '<span style="font-size:12px;color:var(--text3);flex-shrink:0">&#8226;</span>' +
         '<span style="flex:1;font-size:13px;color:var(--text2);cursor:text;" title="Düzenlemek için tıkla" onclick="startEditModalItem(\'' + field + '\',' + i + ',this)">' + esc(item) + '</span>' +
@@ -1216,6 +1397,17 @@ function startEditInfoModalItem(idx, el) {
   });
 }
 
+function saveBulgu() {
+  return (modalItems.bulgu||[])
+    .filter(function(g){ return g && typeof g === 'object'; })
+    .map(function(g){ return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() }; });
+}
+function saveTedavi() {
+  return (modalItems.tedavi||[])
+    .filter(function(g){ return g && typeof g === 'object'; })
+    .map(function(g){ return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() }; });
+}
+
 function saveModal() {
   const title = document.getElementById('m-title').value.trim();
   if (!title) { showToast('Başlık gir'); document.getElementById('m-title').focus(); return; }
@@ -1224,12 +1416,12 @@ function saveModal() {
   try {
     if (editingId) {
       const idx = localDb[modalType].findIndex(function(e){ return e.id === editingId; });
-      if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:modalItems.bulgu.slice(), tetkik:modalItems.tetkik.slice(), tedavi:modalItems.tedavi.slice(), notlar:modalItems.notlar.slice() });
+      if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:saveBulgu(), tetkik:modalItems.tetkik.slice(), tedavi:saveTedavi(), notlar:modalItems.notlar.slice() });
     } else {
       if (localDb[modalType].find(function(e){ return e.title.toLowerCase() === title.toLowerCase(); })) {
         showToast('Bu kayıt zaten var'); return;
       }
-      localDb[modalType].unshift({ id: crypto.randomUUID(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:modalItems.bulgu.slice(), tetkik:modalItems.tetkik.slice(), tedavi:modalItems.tedavi.slice(), notlar:modalItems.notlar.slice() });
+      localDb[modalType].unshift({ id: crypto.randomUUID(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:saveBulgu(), tetkik:modalItems.tetkik.slice(), tedavi:saveTedavi(), notlar:modalItems.notlar.slice() });
     }
     scheduleSave();
     closeModal();
@@ -1274,7 +1466,44 @@ function cardHTML(type, entry, forceOpen) {
   const safeId = esc(entry.id);
   const safeType = esc(type);
   const fieldsHtml = FIELDS.map(function(field) {
+    if (field === 'bulgu') {
+      var bulgu = migrateBulgu(entry.bulgu);
+      if (!bulgu.length) return '';
+      var grupHTML = bulgu.map(function(grup) {
+        if (!grup.maddeler.length && !grup.baslik) return '';
+        var baslikHTML = grup.baslik
+          ? '<div style="font-size:14px;font-weight:400;color:#1a7a6e;padding:8px 16px 3px 16px;">' + esc(grup.baslik) + '</div>'
+          : '';
+        var maddeHTML = grup.maddeler.map(function(item) {
+          return '<div class="item-row" style="padding-left:' + (grup.baslik ? '32px' : '24px') + ';padding-top:4px;padding-bottom:4px;"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span></div>';
+        }).join('');
+        return baslikHTML + maddeHTML;
+      }).join('');
+      if (!grupHTML) return '';
+      return '<div class="field-section">' +
+        '<div class="field-header"><span class="field-label" style="color:#1a7a6e">BULGU & BELİRTİ</span></div>' +
+        '<div>' + grupHTML + '</div></div>';
+    }
+    if (field === 'tedavi') {
+      var tedavi = migrateTedavi(entry.tedavi);
+      if (!tedavi.length) return '';
+      var grupHTML = tedavi.map(function(grup, gi) {
+        if (!grup.maddeler.length && !grup.baslik) return '';
+        var baslikHTML = grup.baslik
+          ? '<div style="font-size:14px;font-weight:400;color:#1a6fa8;padding:8px 16px 3px 16px;">' + esc(grup.baslik) + '</div>'
+          : '';
+        var maddeHTML = grup.maddeler.map(function(item, mi) {
+          return '<div class="item-row" style="padding-left:' + (grup.baslik ? '32px' : '24px') + ';padding-top:4px;padding-bottom:4px;"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span></div>';
+        }).join('');
+        return baslikHTML + maddeHTML;
+      }).join('');
+      if (!grupHTML) return '';
+      return '<div class="field-section">' +
+        '<div class="field-header"><span class="field-label" style="color:#1a6fa8">TEDAVİ</span></div>' +
+        '<div>' + grupHTML + '</div></div>';
+    }
     const items = entry[field] || [];
+    if (!items.length) return '';
     const itemsHtml = items.map(function(item, i) {
       return '<div class="item-row"><span class="i-dot"></span><span class="i-text">' + esc(item) + '</span>' +
         '<button class="i-del" title="Düzenle" onclick="editItem(\'' + safeType + '\',\'' + safeId + '\',\'' + field + '\',' + i + ')">✏️</button>' +
@@ -1304,11 +1533,25 @@ function rerenderCard(type, id) {
   old.replaceWith(tmp.firstElementChild);
 }
 
+function countEntryItems(e) {
+  return FIELDS.reduce(function(b, f) {
+    if (f === 'tedavi') {
+      var ted = migrateTedavi(e.tedavi);
+      return b + ted.reduce(function(s, g){ return s + (g.maddeler||[]).length; }, 0);
+    }
+    if (f === 'bulgu') {
+      var bulgu = migrateBulgu(e.bulgu);
+      return b + bulgu.reduce(function(s, g){ return s + (g.maddeler||[]).length; }, 0);
+    }
+    return b + (e[f]||[]).length;
+  }, 0);
+}
+
 // ── RENDER LIST ──
 function renderList(type) {
   const container = document.getElementById('list-' + type);
   const entries = localDb[type];
-  const totalItems = entries.reduce(function(a,e){ return a + FIELDS.reduce(function(b,f){ return b + (e[f]||[]).length; }, 0); }, 0);
+  const totalItems = entries.reduce(function(a,e){ return a + countEntryItems(e); }, 0);
   document.getElementById('stats-' + type).innerHTML = '<strong>' + entries.length + '</strong> giriş · <strong>' + totalItems + '</strong> madde';
   if (!entries.length) {
     const icons = { disease:'🩺', finding:'🔬', symptom:'🤒' };
@@ -1339,7 +1582,23 @@ function doSearch(q) {
       const fieldMatches = {};
       let anyMatch = false;
       FIELDS.forEach(function(f) {
-        const matched = (entry[f]||[]).filter(function(i){ return i.toLowerCase().includes(ql); });
+        if (f === 'tedavi') {
+          var tedItems = [];
+          migrateTedavi(entry.tedavi).forEach(function(g){ (g.maddeler||[]).forEach(function(m){ tedItems.push(m); }); });
+          var matched = tedItems.filter(function(i){ return i.toLowerCase().includes(ql); });
+          if (matched.length) { fieldMatches['tedavi'] = matched; anyMatch = true; }
+          else if (titleMatch) { fieldMatches['tedavi'] = tedItems; }
+          return;
+        }
+        if (f === 'bulgu') {
+          var bulguItems = [];
+          migrateBulgu(entry.bulgu).forEach(function(g){ (g.maddeler||[]).forEach(function(m){ bulguItems.push(m); }); });
+          var matched = bulguItems.filter(function(i){ return i.toLowerCase().includes(ql); });
+          if (matched.length) { fieldMatches['bulgu'] = matched; anyMatch = true; }
+          else if (titleMatch) { fieldMatches['bulgu'] = bulguItems; }
+          return;
+        }
+        var matched = (entry[f]||[]).filter(function(i){ return i.toLowerCase().includes(ql); });
         if (matched.length) { fieldMatches[f] = matched; anyMatch = true; }
         else if (titleMatch) { fieldMatches[f] = entry[f]||[]; }
       });
@@ -1458,6 +1717,20 @@ function buildPrintHTML(sections) {
           ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar']
           : ['tanim','sorgu','tetkik','notlar'];
         fields.forEach(function(f) {
+          if (f === 'tedavi') {
+            var tedavi = migrateTedavi(entry.tedavi);
+            if (!tedavi.length) return;
+            html += '<div style="margin-bottom:6px;"><span style="font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;color:#1a6fa8;">Tedavi</span>';
+            tedavi.forEach(function(grup) {
+              if (!grup.maddeler.length) return;
+              if (grup.baslik) html += '<div style="font-size:11px;font-weight:bold;color:#1a6fa8;margin:4px 0 2px;">' + grup.baslik + '</div>';
+              html += '<ul style="margin:2px 0 4px 18px;padding:0;">';
+              grup.maddeler.forEach(function(m){ html += '<li style="font-size:13px;color:#5c524a;margin-bottom:2px;">' + m + '</li>'; });
+              html += '</ul>';
+            });
+            html += '</div>';
+            return;
+          }
           var items = entry[f] || [];
           if (!items.length) return;
           html += '<div style="margin-bottom:6px;">';
@@ -1493,13 +1766,15 @@ function exportPDF(sections) {
   var printArea = document.getElementById('printArea');
   printArea.innerHTML = buildPrintHTML(sections);
   printArea.style.display = 'block';
+  // Ayarlar panelini kapat, sonra yazdır
+  closeSettings();
   setTimeout(function(){
     window.print();
     setTimeout(function(){
       printArea.style.display = 'none';
       printArea.innerHTML = '';
-    }, 1000);
-  }, 200);
+    }, 1500);
+  }, 350);
 }
 
 function exportWord(sections) {
@@ -1525,6 +1800,17 @@ function exportTXT(sections) {
       } else {
         var fields = sec.type === 'disease' ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'] : ['tanim','sorgu','tetkik','notlar'];
         fields.forEach(function(f) {
+          if (f === 'tedavi') {
+            var tedavi = migrateTedavi(entry.tedavi);
+            if (!tedavi.length) return;
+            lines.push('  [TEDAVİ]');
+            tedavi.forEach(function(grup) {
+              if (!grup.maddeler.length) return;
+              if (grup.baslik) lines.push('    ▸ ' + grup.baslik);
+              grup.maddeler.forEach(function(m){ lines.push('      - ' + m); });
+            });
+            return;
+          }
           var items = entry[f]||[];
           if (!items.length) return;
           lines.push('  [' + (fieldLabels[f]||f).toUpperCase() + ']');
@@ -1555,6 +1841,17 @@ function exportCSV(sections) {
         var fields = sec.type === 'disease' ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'] : ['tanim','sorgu','tetkik','notlar'];
         var hasAny = false;
         fields.forEach(function(f) {
+          if (f === 'tedavi') {
+            var tedavi = migrateTedavi(entry.tedavi);
+            tedavi.forEach(function(grup) {
+              var alan = 'Tedavi' + (grup.baslik ? ' — ' + grup.baslik : '');
+              grup.maddeler.forEach(function(item){
+                rows.push([sec.label, entry.title, alan, item]);
+                hasAny = true;
+              });
+            });
+            return;
+          }
           (entry[f]||[]).forEach(function(item){
             rows.push([sec.label, entry.title, fieldLabels[f]||f, item]);
             hasAny = true;
@@ -2023,7 +2320,15 @@ function renderStats() {
 
   var countItems = function(arr, fields) {
     return arr.reduce(function(s, e) {
-      return s + fields.reduce(function(fs, f) { return fs + (e[f]||[]).length; }, 0);
+      return s + fields.reduce(function(fs, f) {
+        if (f === 'tedavi') {
+          return fs + migrateTedavi(e.tedavi).reduce(function(ts, g){ return ts + (g.maddeler||[]).length; }, 0);
+        }
+        if (f === 'bulgu') {
+          return fs + migrateBulgu(e.bulgu).reduce(function(ts, g){ return ts + (g.maddeler||[]).length; }, 0);
+        }
+        return fs + (e[f]||[]).length;
+      }, 0);
     }, 0);
   };
 
