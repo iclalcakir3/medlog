@@ -191,6 +191,8 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .mfield-sorgu label{color:#8e44ad;}
 .mfield-tetkik label{color:#d35400;}
 .mfield-notlar label{color:#1a7a6e;}
+.mfield-tedavi label{color:#1a6fa8;}
+.mfield-bulgu label{color:#1a7a6e;}
 .mfield input, .mfield-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;transition:border-color .2s,box-shadow .2s;}
 .mfield input:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
 .mfield input::placeholder{color:var(--text3);}
@@ -211,6 +213,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .sr-badge.disease{background:var(--dis-bg);color:var(--dis);}
 .sr-badge.finding{background:var(--fin-bg);color:var(--fin);}
 .sr-badge.symptom{background:var(--sym-bg);color:var(--sym);}
+.sr-badge.info{background:#fdf6e3;color:#b7860b;}
 .sr-title{font-family:'Lora',serif;font-size:15px;font-weight:600;flex:1;}
 .sr-goto{font-size:11px;color:var(--text3);font-weight:700;opacity:0;transition:opacity .15s;white-space:nowrap;}
 .search-result:hover .sr-goto{opacity:1;}
@@ -592,6 +595,21 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
           <button onclick="addModalItem('sorgu')" style="background:none;border:none;cursor:pointer;color:#8e44ad;font-size:20px">+</button>
         </div>
       </div>
+      <div class="mfield mfield-bulgu">
+        <label>Bulgu & Belirti <span class="pool-badge" id="pool-badge-bulgu"></span></label>
+        <div id="items-bulgu"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+          <div class="ac-wrap" style="flex:1">
+            <input id="m-bulgu-new" type="text" placeholder="Bulgu veya belirti ekle… (Enter)" autocomplete="off"
+              oninput="acInput('bulgu')"
+              onkeydown="acKeydown(event,'bulgu')"
+              onfocus="acInput('bulgu')"
+              onblur="acBlur('bulgu')">
+            <div class="ac-dropdown" id="ac-bulgu"></div>
+          </div>
+          <button onclick="addModalItem('bulgu')" style="background:none;border:none;cursor:pointer;color:#1a7a6e;font-size:20px">+</button>
+        </div>
+      </div>
       <div class="mfield mfield-tetkik">
         <label>Tetkik <span class="pool-badge" id="pool-badge-tetkik"></span></label>
         <div id="items-tetkik"></div>
@@ -605,6 +623,21 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
             <div class="ac-dropdown" id="ac-tetkik"></div>
           </div>
           <button onclick="addModalItem('tetkik')" style="background:none;border:none;cursor:pointer;color:#d35400;font-size:20px">+</button>
+        </div>
+      </div>
+      <div class="mfield mfield-tedavi">
+        <label>Tedavi <span class="pool-badge" id="pool-badge-tedavi"></span></label>
+        <div id="items-tedavi"></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+          <div class="ac-wrap" style="flex:1">
+            <input id="m-tedavi-new" type="text" placeholder="Tedavi maddesi ekle… (Enter)" autocomplete="off"
+              oninput="acInput('tedavi')"
+              onkeydown="acKeydown(event,'tedavi')"
+              onfocus="acInput('tedavi')"
+              onblur="acBlur('tedavi')">
+            <div class="ac-dropdown" id="ac-tedavi"></div>
+          </div>
+          <button onclick="addModalItem('tedavi')" style="background:none;border:none;cursor:pointer;color:#1a6fa8;font-size:20px">+</button>
         </div>
       </div>
       <div class="mfield mfield-notlar">
@@ -696,9 +729,9 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 <script>
 // ── CONSTANTS ──
 const LABELS = { disease:'Hastalık', finding:'Bulgu', symptom:'Belirti', info:'Bilgi' };
-const FIELD_LABELS = { tanim:'Tanım', sorgu:'Sorgu', tetkik:'Tetkik', notlar:'Notlar' };
-const FIELDS = ['tanim','sorgu','tetkik','notlar'];
-const FIELD_COLORS = { tanim:'var(--text3)', sorgu:'#8e44ad', tetkik:'#d35400', notlar:'#1a7a6e' };
+const FIELD_LABELS = { tanim:'Tanım', sorgu:'Sorgu', bulgu:'Bulgu & Belirti', tetkik:'Tetkik', tedavi:'Tedavi', notlar:'Notlar' };
+const FIELDS = ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'];
+const FIELD_COLORS = { tanim:'var(--text3)', sorgu:'#8e44ad', bulgu:'#1a7a6e', tetkik:'#d35400', tedavi:'#1a6fa8', notlar:'#1a7a6e' };
 const STORAGE_KEY = 'medlog_local';
 
 // ── STATE ──
@@ -706,7 +739,7 @@ let localDb = loadLocal();
 let currentUser = null;
 let saveTimeout = null;
 let modalType = 'disease';
-let modalItems = { tanim:[], sorgu:[], tetkik:[], notlar:[] };
+let modalItems = { tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] };
 let editingId = null;
 let searchQuery = '';
 
@@ -715,10 +748,10 @@ function loadLocal() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || emptyDb(); }
   catch { return emptyDb(); }
 }
-function emptyDb() { return { disease:[], finding:[], symptom:[], info:[], pool:{ tanim:[], sorgu:[], tetkik:[], notlar:[] } }; }
+function emptyDb() { return { disease:[], finding:[], symptom:[], info:[], pool:{ tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] } }; }
 
 function ensurePool() {
-  if (!localDb.pool) localDb.pool = { tanim:[], sorgu:[], tetkik:[], notlar:[] };
+  if (!localDb.pool) localDb.pool = { tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] };
   FIELDS.forEach(function(f){ if (!Array.isArray(localDb.pool[f])) localDb.pool[f] = []; });
 }
 
@@ -897,7 +930,7 @@ function switchTab(tab) {
 function openModal(type, entryId) {
   modalType = type;
   editingId = entryId || null;
-  modalItems = { tanim:[], sorgu:[], tetkik:[], notlar:[] };
+  modalItems = { tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] };
   if (entryId) {
     const entry = localDb[type].find(function(e){ return e.id === entryId; });
     if (entry) {
@@ -910,6 +943,12 @@ function openModal(type, entryId) {
     FIELDS.forEach(function(f){ modalItems[f] = []; });
     document.getElementById('modalTitle').textContent = 'Yeni ' + LABELS[type];
   }
+  // Tedavi ve Bulgu & Belirti alanlarını sadece hastalık için göster
+  var tedaviField = document.querySelector('.mfield-tedavi');
+  var bulguField = document.querySelector('.mfield-bulgu');
+  if (tedaviField) tedaviField.style.display = type === 'disease' ? '' : 'none';
+  if (bulguField) bulguField.style.display = type === 'disease' ? '' : 'none';
+
   document.getElementById('modalSaveBtn').className = 'btn-save ' + type;
   renderModalItems();
   updatePoolBadges();
@@ -938,7 +977,7 @@ function addModalItem(field, value) {
 }
 
 // ── AUTOCOMPLETE ──
-var acFocusIdx = { tanim:-1, sorgu:-1, tetkik:-1, notlar:-1 };
+var acFocusIdx = { tanim:-1, sorgu:-1, bulgu:-1, tetkik:-1, tedavi:-1, notlar:-1 };
 
 function acGetSuggestions(field, query) {
   ensurePool();
@@ -1146,12 +1185,12 @@ function saveModal() {
   try {
     if (editingId) {
       const idx = localDb[modalType].findIndex(function(e){ return e.id === editingId; });
-      if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
+      if (idx > -1) localDb[modalType][idx] = Object.assign({}, localDb[modalType][idx], { title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:modalItems.bulgu.slice(), tetkik:modalItems.tetkik.slice(), tedavi:modalItems.tedavi.slice(), notlar:modalItems.notlar.slice() });
     } else {
       if (localDb[modalType].find(function(e){ return e.title.toLowerCase() === title.toLowerCase(); })) {
         showToast('Bu kayıt zaten var'); return;
       }
-      localDb[modalType].unshift({ id: crypto.randomUUID(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), tetkik:modalItems.tetkik.slice(), notlar:modalItems.notlar.slice() });
+      localDb[modalType].unshift({ id: crypto.randomUUID(), title:title, tanim:modalItems.tanim.slice(), sorgu:modalItems.sorgu.slice(), bulgu:modalItems.bulgu.slice(), tetkik:modalItems.tetkik.slice(), tedavi:modalItems.tedavi.slice(), notlar:modalItems.notlar.slice() });
     }
     scheduleSave();
     closeModal();
@@ -1777,7 +1816,7 @@ function renderStats() {
     }, 0);
   };
 
-  var disItems = countItems(dis, ['tanim','sorgu','tetkik','notlar']);
+  var disItems = countItems(dis, ['tanim','sorgu','bulgu','tetkik','tedavi','notlar']);
   var finItems = countItems(fin, ['tanim','sorgu','tetkik','notlar']);
   var symItems = countItems(sym, ['tanim','sorgu','tetkik','notlar']);
   var infItems = countItems(inf, ['items']);
