@@ -816,7 +816,6 @@ async function syncFromFirebase() {
         const localOnly = (localDb[type]||[]).filter(e => !remoteIds.has(e.id));
         localDb[type] = [...(remote[type]||[]), ...localOnly];
       });
-      // Pool merge: remote pool öncelikli, local'dekiler eklenir
       if (remote.pool) {
         FIELDS.forEach(function(f) {
           const merged = new Map();
@@ -829,6 +828,7 @@ async function syncFromFirebase() {
     rebuildPoolFromEntries();
     await userDocRef().set(localDb);
     saveLocal();
+    renderAll();
   } catch(e) { console.error('Sync error:', e); }
 }
 
@@ -1512,7 +1512,7 @@ function renderInfoList() {
   var container = document.getElementById('list-info');
   var entries = localDb.info;
   var statsEl = document.getElementById('stats-info');
-  if (statsEl) statsEl.innerHTML = '<strong>' + entries.length + '</strong> kart · <strong>' + entries.reduce(function(a,e){ return a+(e.items||[]).length; },0) + '</strong> madde';
+  if (statsEl) statsEl.innerHTML = '<strong>' + entries.length + '</strong> giriş · <strong>' + entries.reduce(function(a,e){ return a+(e.items||[]).length; },0) + '</strong> madde';
   if (!entries.length) {
     container.innerHTML = '<div class="empty-state"><div class="ei">📋</div><h3>Henüz bilgi kartı eklenmedi</h3><p>Yukarıdaki butona tıklayarak ilk kartını ekle.</p></div>';
     return;
