@@ -1485,6 +1485,7 @@ function toggleInfoCard(id) {
 }
 
 function infoCardHTML(entry) {
+  var safeId = esc(entry.id);
   var wasOpen = (function(){ var c = document.getElementById('icard-' + entry.id); return c && c.classList.contains('open'); })();
   var itemsHtml = (entry.items||[]).map(function(item, i) {
     return '<div class="info-body-item">' +
