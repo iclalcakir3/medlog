@@ -108,6 +108,21 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .info-body-item:hover .info-body-del{opacity:1;}
 .info-body-del:hover{color:var(--dis);}
 
+/* Info card grup yapısı */
+.info-grup{border:1.5px solid #e8d5a3;border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;background:#fdf9f0;}
+.info-grup-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.info-grup-title{flex:1;border:none;border-bottom:1.5px solid #e8d5a3;background:transparent;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#b7860b;padding:2px 4px;outline:none;}
+.info-grup-title::placeholder{color:#e8d5a3;font-weight:400;}
+.info-grup-del{background:none;border:none;cursor:pointer;color:#e8d5a3;font-size:16px;padding:0;line-height:1;transition:color .15s;}
+.info-grup-del:hover{color:var(--dis);}
+.info-grup-madde-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.info-grup-madde-text{flex:1;font-size:13px;color:var(--text2);}
+.info-grup-madde-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:14px;padding:0;transition:color .15s;}
+.info-grup-madde-del:hover{color:var(--dis);}
+.info-grup-madde-input{display:flex;gap:6px;margin-top:6px;margin-left:32px;}
+.info-grup-madde-input input{flex:1;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface);outline:none;}
+.info-grup-madde-input input:focus{border-color:#b7860b;}
+
 /* Pool drawer */
 .pool-drawer-overlay{position:fixed;inset:0;background:rgba(26,23,20,.45);z-index:400;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);}
 .pool-drawer-overlay.open{display:flex;}
@@ -719,13 +734,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <div class="mfield" style="border-top:1px solid var(--border);padding-top:12px;">
         <label style="color:#b7860b;">Notlar</label>
         <div id="im-items"></div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-          <input id="im-new" type="text" placeholder="Not ekle… (Enter)" autocomplete="off"
-            class="mfield-input"
-            onfocus="this.style.borderColor='#b7860b'" onblur="this.style.borderColor=''"
-            onkeydown="if(event.key==='Enter'){addInfoItem();this.focus();}">
-          <button onclick="addInfoItem()" style="background:none;border:none;cursor:pointer;color:#b7860b;font-size:22px;line-height:1;">+</button>
-        </div>
+        <button onclick="addInfoGrup()" style="margin-top:8px;background:none;border:1.5px dashed #b7860b;border-radius:var(--radius-sm);padding:6px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#b7860b;cursor:pointer;width:100%;">+ Altbaşlık ekle</button>
       </div>
     </div>
     <div class="modal-footer">
@@ -825,8 +834,10 @@ function rebuildPoolFromEntries() {
     });
     if (field === 'notlar') {
       (localDb.info||[]).forEach(function(entry) {
-        (entry.items||[]).forEach(function(item) {
-          if (item && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
+        migrateInfoItems(entry.items||[]).forEach(function(grup) {
+          (grup.maddeler||[]).forEach(function(item) {
+            if (item && item.trim()) seen.set(item.trim().toLowerCase(), item.trim());
+          });
         });
       });
     }
@@ -1369,32 +1380,7 @@ function editItem(type, entryId, field, idx) {
   });
 }
 
-function editInfoItem(entryId, idx) {
-  var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
-  if (!entry) return;
-  var current = entry.items[idx];
-  var container = document.getElementById('icard-' + entryId);
-  if (!container) return;
-  var rows = container.querySelectorAll('.info-body-item');
-  if (!rows[idx]) return;
-  var textEl = rows[idx].querySelector('.info-body-text');
-  if (!textEl) return;
-  startInlineEdit(textEl, current, '#b7860b', function(val) {
-    if (val && val !== current) {
-      entry.items[idx] = val;
-      scheduleSave();
-    }
-    renderInfoList();
-  });
-}
 
-function startEditInfoModalItem(idx, el) {
-  var current = infoModalItems[idx];
-  startInlineEdit(el, current, '#b7860b', function(val) {
-    if (val && val !== current) { infoModalItems[idx] = val; }
-    renderInfoModalItems();
-  });
-}
 
 function saveBulgu() {
   return (modalItems.bulgu||[])
@@ -1607,9 +1593,13 @@ function doSearch(q) {
   // Bilgi kartlarını da ara
   (localDb.info||[]).forEach(function(entry) {
     const titleMatch = entry.title.toLowerCase().includes(ql);
-    const matched = (entry.items||[]).filter(function(i){ return i.toLowerCase().includes(ql); });
+    var grups = migrateInfoItems(entry.items || []);
+    // Tüm maddelerden düz liste çıkar (arama için)
+    var allMaddeler = [];
+    grups.forEach(function(g){ (g.maddeler||[]).forEach(function(m){ allMaddeler.push(m); }); });
+    var matched = allMaddeler.filter(function(i){ return i.toLowerCase().includes(ql); });
     if (titleMatch || matched.length) {
-      results.push({ type:'info', entry:entry, fieldMatches:{ items: matched.length ? matched : (titleMatch ? entry.items : []) }, isInfo:true });
+      results.push({ type:'info', entry:entry, fieldMatches:{ items: matched.length ? matched : (titleMatch ? allMaddeler : []) }, isInfo:true });
     }
   });
 
@@ -1705,11 +1695,16 @@ function buildPrintHTML(sections) {
       html += '<div style="margin-bottom:18px;page-break-inside:avoid;">';
       html += '<h3 style="font-size:15px;margin:0 0 8px;color:#1a1714;">• ' + entry.title + '</h3>';
       if (sec.type === 'info') {
-        var items = entry.items || [];
-        if (items.length) {
-          html += '<ul style="margin:0 0 4px 20px;padding:0;">';
-          items.forEach(function(item){ html += '<li style="font-size:13px;color:#5c524a;margin-bottom:3px;">' + item + '</li>'; });
-          html += '</ul>';
+        var grups = migrateInfoItems(entry.items || []);
+        var hasItems = grups.some(function(g){ return g.maddeler && g.maddeler.length; });
+        if (hasItems) {
+          grups.forEach(function(grup) {
+            if (!grup.maddeler.length) return;
+            if (grup.baslik) html += '<div style="font-size:13px;color:#b7860b;margin:4px 0 2px;">' + grup.baslik + '</div>';
+            html += '<ul style="margin:2px 0 4px ' + (grup.baslik ? '28px' : '20px') + ';padding:0;">';
+            grup.maddeler.forEach(function(item){ html += '<li style="font-size:13px;color:#5c524a;margin-bottom:3px;">' + item + '</li>'; });
+            html += '</ul>';
+          });
         }
       } else {
         var fields = sec.type === 'disease'
@@ -1851,7 +1846,12 @@ function exportTXT(sections) {
     sec.entries.forEach(function(entry) {
       lines.push('• ' + entry.title);
       if (sec.type === 'info') {
-        (entry.items||[]).forEach(function(item){ lines.push('  - ' + item); });
+        var grups = migrateInfoItems(entry.items||[]);
+        grups.forEach(function(grup) {
+          if (!grup.maddeler.length) return;
+          if (grup.baslik) lines.push('  ▸ ' + grup.baslik);
+          grup.maddeler.forEach(function(item){ lines.push((grup.baslik ? '    ' : '  ') + '- ' + item); });
+        });
       } else {
         var fields = sec.type === 'disease' ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'] : ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'];
         fields.forEach(function(f) {
@@ -1902,9 +1902,13 @@ function exportCSV(sections) {
   sections.forEach(function(sec) {
     sec.entries.forEach(function(entry) {
       if (sec.type === 'info') {
-        var items = entry.items||[];
-        if (!items.length) { rows.push([sec.label, entry.title, '', '']); return; }
-        items.forEach(function(item){ rows.push([sec.label, entry.title, 'Notlar', item]); });
+        var grups = migrateInfoItems(entry.items||[]);
+        var hasAnyItems = grups.some(function(g){ return g.maddeler && g.maddeler.length; });
+        if (!hasAnyItems) { rows.push([sec.label, entry.title, '', '']); return; }
+        grups.forEach(function(grup) {
+          var alan = 'Notlar' + (grup.baslik ? ' — ' + grup.baslik : '');
+          (grup.maddeler||[]).forEach(function(item){ rows.push([sec.label, entry.title, alan, item]); });
+        });
       } else {
         var fields = sec.type === 'disease' ? ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'] : ['tanim','sorgu','bulgu','tetkik','tedavi','notlar'];
         var hasAny = false;
@@ -1966,7 +1970,17 @@ function importData(e) {
           // Sadece bilinen alanları al, ham objeyi kopyalama
           var clean;
           if (type === 'info') {
-            clean = { id: entry.id, title: entry.title.trim(), items: Array.isArray(entry.items) ? entry.items.filter(function(x){ return typeof x === 'string'; }).map(function(x){ return x.trim(); }).filter(Boolean) : [] };
+            var rawItems = Array.isArray(entry.items) ? entry.items : [];
+            // Yeni format mı (obje dizisi) yoksa eski format mı (string dizisi)?
+            var cleanItems;
+            if (rawItems.length && typeof rawItems[0] === 'object' && rawItems[0] !== null) {
+              cleanItems = rawItems.filter(function(g){ return g && typeof g === 'object'; }).map(function(g){
+                return { baslik: typeof g.baslik === 'string' ? g.baslik.trim() : '', maddeler: Array.isArray(g.maddeler) ? g.maddeler.filter(function(x){ return typeof x === 'string'; }).map(function(x){ return x.trim(); }).filter(Boolean) : [] };
+              });
+            } else {
+              cleanItems = rawItems.length ? [{ baslik: '', maddeler: rawItems.filter(function(x){ return typeof x === 'string'; }).map(function(x){ return x.trim(); }).filter(Boolean) }] : [];
+            }
+            clean = { id: entry.id, title: entry.title.trim(), items: cleanItems };
           } else {
             clean = { id: entry.id, title: entry.title.trim() };
             FIELDS.forEach(function(f){ clean[f] = Array.isArray(entry[f]) ? entry[f].filter(function(x){ return typeof x === 'string'; }).map(function(x){ return x.trim(); }).filter(Boolean) : []; });
@@ -2010,8 +2024,17 @@ function clearAllData() {
 }
 
 // ── INFO CARDS ──
-var infoModalItems = [];
+var infoModalItems = []; // [{baslik: string, maddeler: string[]}]
 var infoEditingId = null;
+
+// Eski format (string[]) → yeni format ({baslik, maddeler}[]) dönüşümü
+function migrateInfoItems(items) {
+  if (!Array.isArray(items) || !items.length) return [];
+  // Zaten yeni formatta mı?
+  if (typeof items[0] === 'object' && items[0] !== null) return items;
+  // Eski format: string[] → tek bir altbaşlıksız grup
+  return [{ baslik: '', maddeler: items.filter(function(x){ return typeof x === 'string'; }) }];
+}
 
 function openInfoModal(entryId) {
   infoEditingId = entryId || null;
@@ -2020,7 +2043,9 @@ function openInfoModal(entryId) {
     var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
     if (entry) {
       document.getElementById('im-title').value = entry.title;
-      infoModalItems = (entry.items||[]).slice();
+      infoModalItems = migrateInfoItems(entry.items || []).map(function(g){
+        return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() };
+      });
       document.getElementById('infoModalTitle').textContent = entry.title + ' — Düzenle';
     }
   } else {
@@ -2037,41 +2062,83 @@ function closeInfoModal() {
   infoEditingId = null;
 }
 
-function addInfoItem() {
-  var inp = document.getElementById('im-new');
-  var val = inp.value.trim();
-  if (!val) return;
-  infoModalItems.push(val);
-  inp.value = '';
+function addInfoGrup() {
+  infoModalItems.push({ baslik: '', maddeler: [] });
+  renderInfoModalItems();
+  // Başlık input'una fokus ver
+  setTimeout(function(){
+    var inputs = document.querySelectorAll('.info-grup-title');
+    if (inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
+function removeInfoGrup(gi) {
+  infoModalItems.splice(gi, 1);
   renderInfoModalItems();
 }
 
-function removeInfoModalItem(idx) {
-  infoModalItems.splice(idx, 1);
+function addInfoGrupMadde(gi) {
+  var inp = document.getElementById('im-madde-' + gi);
+  if (!inp) return;
+  var val = inp.value.trim();
+  if (!val) return;
+  infoModalItems[gi].maddeler.push(val);
+  inp.value = '';
   renderInfoModalItems();
+  setTimeout(function(){ var el = document.getElementById('im-madde-' + gi); if(el) el.focus(); }, 30);
+}
+
+function removeInfoGrupMadde(gi, mi) {
+  infoModalItems[gi].maddeler.splice(mi, 1);
+  renderInfoModalItems();
+}
+
+function updateInfoGrupBaslik(gi, val) {
+  if (infoModalItems[gi]) infoModalItems[gi].baslik = val;
 }
 
 function renderInfoModalItems() {
-  document.getElementById('im-items').innerHTML = infoModalItems.map(function(item, i) {
-    return '<div class="info-item-row">' +
-      '<span class="info-item-dot"></span>' +
-      '<span class="info-item-text" style="cursor:text;" title="Düzenlemek için tıkla" onclick="startEditInfoModalItem(' + i + ',this)">' + esc(item) + '</span>' +
-      '<button class="info-item-del" onclick="removeInfoModalItem(' + i + ')">&#215;</button>' +
-      '</div>';
+  document.getElementById('im-items').innerHTML = infoModalItems.map(function(grup, gi) {
+    var maddeHTML = grup.maddeler.map(function(m, mi) {
+      return '<div class="info-grup-madde-row">' +
+        '<span style="font-size:12px;color:#b7860b;flex-shrink:0;margin-left:8px;">·</span>' +
+        '<span class="info-grup-madde-text">' + esc(m) + '</span>' +
+        '<button class="info-grup-madde-del" onclick="removeInfoGrupMadde(' + gi + ',' + mi + ')">&#215;</button>' +
+        '</div>';
+    }).join('');
+    return '<div class="info-grup">' +
+      '<div class="info-grup-header">' +
+        '<input class="info-grup-title" placeholder="Altbaşlık (örn: Komplikasyonlar)…" value="' + esc(grup.baslik) + '" ' +
+          'oninput="updateInfoGrupBaslik(' + gi + ',this.value)" ' +
+          'onkeydown="if(event.key===\'Enter\'){event.preventDefault();var el=document.getElementById(\'im-madde-\'+' + gi + ');if(el)el.focus();}">' +
+        '<button class="info-grup-del" onclick="removeInfoGrup(' + gi + ')">&#215;</button>' +
+      '</div>' +
+      maddeHTML +
+      '<div class="info-grup-madde-input">' +
+        '<input id="im-madde-' + gi + '" type="text" placeholder="Madde ekle… (Enter)" autocomplete="off" ' +
+          'onkeydown="if(event.key===\'Enter\'){addInfoGrupMadde(' + gi + ');}">' +
+        '<button onclick="addInfoGrupMadde(' + gi + ')" style="background:none;border:none;cursor:pointer;color:#b7860b;font-size:20px;line-height:1;">+</button>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
-
+function saveInfoGrupData() {
+  return infoModalItems
+    .filter(function(g){ return g && typeof g === 'object'; })
+    .map(function(g){ return { baslik: g.baslik||'', maddeler: (g.maddeler||[]).slice() }; });
+}
 
 function saveInfoModal() {
   var title = document.getElementById('im-title').value.trim();
   if (!title) { showToast('Başlık gir'); document.getElementById('im-title').focus(); return; }
   if (!localDb.info) localDb.info = [];
+  var items = saveInfoGrupData();
   if (infoEditingId) {
     var idx = localDb.info.findIndex(function(e){ return e.id === infoEditingId; });
-    if (idx > -1) localDb.info[idx] = Object.assign({}, localDb.info[idx], { title:title, items:infoModalItems.slice() });
+    if (idx > -1) localDb.info[idx] = Object.assign({}, localDb.info[idx], { title:title, items:items });
   } else {
-    localDb.info.unshift({ id: crypto.randomUUID(), title:title, items:infoModalItems.slice() });
+    localDb.info.unshift({ id: crypto.randomUUID(), title:title, items:items });
   }
   scheduleSave();
   closeInfoModal();
@@ -2087,10 +2154,15 @@ function deleteInfoEntry(id) {
   });
 }
 
-function deleteInfoItem(entryId, idx) {
+function deleteInfoItem(entryId, gi, mi) {
   var entry = (localDb.info||[]).find(function(e){ return e.id === entryId; });
   if (!entry) return;
-  entry.items.splice(idx, 1);
+  var grups = migrateInfoItems(entry.items || []);
+  if (!grups[gi]) return;
+  grups[gi].maddeler.splice(mi, 1);
+  // Altbaşlıksız ve boş grup ise kaldır
+  if (!grups[gi].baslik && !grups[gi].maddeler.length) grups.splice(gi, 1);
+  entry.items = grups;
   scheduleSave(); renderInfoList();
 }
 
@@ -2102,13 +2174,22 @@ function toggleInfoCard(id) {
 function infoCardHTML(entry) {
   var safeId = esc(entry.id);
   var wasOpen = (function(){ var c = document.getElementById('icard-' + entry.id); return c && c.classList.contains('open'); })();
-  var itemsHtml = (entry.items||[]).map(function(item, i) {
-    return '<div class="info-body-item">' +
-      '<span class="info-body-dot"></span>' +
-      '<span class="info-body-text">' + esc(item) + '</span>' +
-      '<button class="info-body-del" title="Düzenle" onclick="editInfoItem(\'' + safeId + '\',' + i + ')">✏️</button>' +
-      '<button class="info-body-del" onclick="deleteInfoItem(\'' + safeId + '\',' + i + ')">&#215;</button>' +
-      '</div>';
+  var grups = migrateInfoItems(entry.items || []);
+
+  var itemsHtml = grups.map(function(grup, gi) {
+    if (!grup.maddeler.length && !grup.baslik) return '';
+    var baslikHTML = grup.baslik
+      ? '<div style="font-size:13px;font-weight:700;color:#b7860b;padding:8px 16px 3px 16px;">' + esc(grup.baslik) + '</div>'
+      : '';
+    var maddeHTML = grup.maddeler.map(function(item, mi) {
+      var indent = grup.baslik ? '32px' : '16px';
+      return '<div class="info-body-item" style="padding-left:' + indent + '">' +
+        '<span class="info-body-dot"></span>' +
+        '<span class="info-body-text">' + esc(item) + '</span>' +
+        '<button class="info-body-del" onclick="deleteInfoItem(\'' + safeId + '\',' + gi + ',' + mi + ')">&#215;</button>' +
+        '</div>';
+    }).join('');
+    return baslikHTML + maddeHTML;
   }).join('') || '<div style="padding:10px 16px;font-size:13px;color:var(--text3);font-style:italic;">Not yok</div>';
 
   return '<div class="entry-card info' + (wasOpen ? ' open' : '') + '" id="icard-' + safeId + '">' +
@@ -2128,7 +2209,10 @@ function renderInfoList() {
   var container = document.getElementById('list-info');
   var entries = localDb.info;
   var statsEl = document.getElementById('stats-info');
-  if (statsEl) statsEl.innerHTML = '<strong>' + entries.length + '</strong> giriş · <strong>' + entries.reduce(function(a,e){ return a+(e.items||[]).length; },0) + '</strong> madde';
+  if (statsEl) statsEl.innerHTML = '<strong>' + entries.length + '</strong> giriş · <strong>' + entries.reduce(function(a,e){
+    var grups = migrateInfoItems(e.items||[]);
+    return a + grups.reduce(function(b,g){ return b+(g.maddeler||[]).length; }, 0);
+  },0) + '</strong> madde';
   if (!entries.length) {
     container.innerHTML = '<div class="empty-state"><div class="ei">📋</div><h3>Henüz bilgi kartı eklenmedi</h3><p>Yukarıdaki butona tıklayarak ilk kartını ekle.</p></div>';
     return;
@@ -2523,7 +2607,11 @@ function buildQuestions(cats, count) {
     entries.forEach(function(entry) {
       var fields = cat === 'info' ? ['items'] : ['tanim','sorgu','tetkik','notlar'];
       var allItems = [];
-      fields.forEach(function(f){ (entry[f]||[]).forEach(function(v){ allItems.push({field:f,val:v}); }); });
+      if (cat === 'info') {
+        migrateInfoItems(entry.items||[]).forEach(function(g){ (g.maddeler||[]).forEach(function(v){ allItems.push({field:'items',val:v}); }); });
+      } else {
+        fields.forEach(function(f){ (entry[f]||[]).forEach(function(v){ allItems.push({field:f,val:v}); }); });
+      }
       if (!allItems.length) return;
 
       // Tip A: Hastalık → madde sor (çoktan seçmeli veya açık uçlu)
@@ -2534,8 +2622,12 @@ function buildQuestions(cats, count) {
         var wrongs = [];
         var others = (localDb[cat]||[]).filter(function(e){ return e.id !== entry.id; });
         shuffle(others).slice(0,5).forEach(function(o){
-          var oFields = cat==='info'?['items']:['tanim','sorgu','tetkik','notlar'];
-          oFields.forEach(function(f){ (o[f]||[]).forEach(function(v){ wrongs.push(v); }); });
+          if (cat === 'info') {
+            migrateInfoItems(o.items||[]).forEach(function(g){ (g.maddeler||[]).forEach(function(v){ wrongs.push(v); }); });
+          } else {
+            var oFields = ['tanim','sorgu','tetkik','notlar'];
+            oFields.forEach(function(f){ (o[f]||[]).forEach(function(v){ wrongs.push(v); }); });
+          }
         });
         wrongs = shuffle(wrongs).slice(0,3);
         if (wrongs.length < 1) return;
@@ -2547,8 +2639,8 @@ function buildQuestions(cats, count) {
         // Açık uçlu: kartın maddelerini yaz
         var fieldLabel = { tanim:'Tanımları', sorgu:'Sorguları', tetkik:'Tetkikleri', notlar:'Notları', items:'Maddelerini' };
         var field = fields[Math.floor(Math.random()*fields.length)];
-        var items = (entry[field]||[]);
-        if (!items.length) { field = 'items'; items = allItems.map(function(x){return x.val;}); }
+        var items = cat === 'info' ? allItems.map(function(x){return x.val;}) : (entry[field]||[]);
+        if (!items.length) { items = allItems.map(function(x){return x.val;}); }
         if (!items.length) return;
         pool.push({ type:'open', cat:cat, catLabel:typeLabels[cat], catColor:typeColors[cat],
           question: '"' + entry.title + '" kartının ' + (fieldLabel[field]||'maddelerini') + ' yaz.',
