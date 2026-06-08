@@ -2301,12 +2301,20 @@ function updateInfoGrupBaslik(gi, val) {
   if (infoModalItems[gi]) infoModalItems[gi].baslik = val;
 }
 
+function editInfoGrupMadde(gi, mi, el) {
+  var current = infoModalItems[gi].maddeler[mi];
+  startInlineEdit(el, current, '#b7860b', function(val) {
+    if (val) infoModalItems[gi].maddeler[mi] = val;
+    renderInfoModalItems();
+  });
+}
+
 function renderInfoModalItems() {
   document.getElementById('im-items').innerHTML = infoModalItems.map(function(grup, gi) {
     var maddeHTML = grup.maddeler.map(function(m, mi) {
       return '<div class="info-grup-madde-row">' +
         '<span style="font-size:12px;color:#b7860b;flex-shrink:0;margin-left:8px;">·</span>' +
-        '<span class="info-grup-madde-text">' + esc(m) + '</span>' +
+        '<span class="info-grup-madde-text" onclick="editInfoGrupMadde(' + gi + ',' + mi + ',this)" style="cursor:text;" title="Düzenlemek için tıkla">' + esc(m) + '</span>' +
         '<button class="info-grup-madde-del" onclick="removeInfoGrupMadde(' + gi + ',' + mi + ')">&#215;</button>' +
         '</div>';
     }).join('');
