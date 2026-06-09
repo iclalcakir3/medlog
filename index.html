@@ -939,10 +939,19 @@ async function syncFromFirebase() {
     const snap = await userDocRef().get();
     if (snap.exists) {
       const remote = snap.data();
+      // Silinen kartları takip et: localStorage'daki mevcut ID'leri al
+      const localIds = {};
       ['disease','finding','symptom','info'].forEach(type => {
+        localIds[type] = new Set((localDb[type]||[]).map(e => e.id));
+      });
+      ['disease','finding','symptom','info'].forEach(type => {
+        // Remote'daki kartlardan sadece local'de de olan veya local'e yeni eklenenleri al
+        // Local'de silinmiş olanları (remote'da var ama local'de yok) geri getirme
+        const remoteFiltered = (remote[type]||[]).filter(e => localIds[type].has(e.id));
+        // Local'de olup remote'da olmayan yeni eklemeleri koru
         const remoteIds = new Set((remote[type]||[]).map(e => e.id));
         const localOnly = (localDb[type]||[]).filter(e => !remoteIds.has(e.id));
-        localDb[type] = [...(remote[type]||[]), ...localOnly];
+        localDb[type] = [...remoteFiltered, ...localOnly];
       });
       if (remote.pool) {
         FIELDS.forEach(function(f) {
@@ -958,6 +967,18 @@ async function syncFromFirebase() {
     saveLocal();
     renderAll();
   } catch(e) { console.error('Sync error:', e); }
+}
+
+async function saveToFirebase() {
+  if (!currentUser || !db) return;
+  try {
+    await userDocRef().set(localDb);
+    saveLocal();
+    setSaving(false, true);
+  } catch(e) {
+    console.error('Firebase save error:', e);
+    setSaving(false, false);
+  }
 }
 
 function scheduleSave() {
