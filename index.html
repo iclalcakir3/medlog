@@ -595,6 +595,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
               </div>
             </div>
             <div class="sync-badge synced"><span class="dot"></span> Firebase ile senkronize</div>
+            <button class="s-btn" id="manualSyncBtn" onclick="manualSync()">🔄 Şimdi senkronize et</button>
             <button class="s-btn danger" onclick="doSignOut()">🚪 Çıkış yap</button>
           </div>
         </div>
@@ -961,34 +962,37 @@ async function syncFromFirebase() {
     const snap = await userDocRef().get();
     if (snap.exists) {
       const remote = snap.data();
-      // Silinen kartları takip et: localStorage'daki mevcut ID'leri al
-      const localIds = {};
-      ['disease','finding','symptom','info'].forEach(type => {
-        localIds[type] = new Set((localDb[type]||[]).map(e => e.id));
-      });
-      ['disease','finding','symptom','info'].forEach(type => {
-        // Remote'daki kartlardan sadece local'de de olan veya local'e yeni eklenenleri al
-        // Local'de silinmiş olanları (remote'da var ama local'de yok) geri getirme
-        const remoteFiltered = (remote[type]||[]).filter(e => localIds[type].has(e.id));
-        // Local'de olup remote'da olmayan yeni eklemeleri koru
-        const remoteIds = new Set((remote[type]||[]).map(e => e.id));
-        const localOnly = (localDb[type]||[]).filter(e => !remoteIds.has(e.id));
-        localDb[type] = [...remoteFiltered, ...localOnly];
-      });
-      if (remote.pool) {
-        FIELDS.forEach(function(f) {
-          const merged = new Map();
-          (remote.pool[f]||[]).forEach(function(x){ merged.set(x.toLowerCase(), x); });
-          ((localDb.pool||{})[f]||[]).forEach(function(x){ if(!merged.has(x.toLowerCase())) merged.set(x.toLowerCase(), x); });
-          localDb.pool[f] = Array.from(merged.values());
-        });
+      const localTime = localDb._savedAt || 0;
+      const remoteTime = remote._savedAt || 0;
+
+      if (remoteTime > localTime) {
+        // Firebase daha yeni — Firebase'i al
+        localDb = remote;
+        ensurePool();
       }
+      // localTime >= remoteTime ise local daha yeni — local'i Firebase'e yaz
     }
     rebuildPoolFromEntries();
+    localDb._savedAt = Date.now();
     await userDocRef().set(localDb);
     saveLocal();
     renderAll();
   } catch(e) { console.error('Sync error:', e); }
+}
+
+async function manualSync() {
+  if (!currentUser || !db) { showToast('⚠️ Giriş yapılmamış'); return; }
+  const btn = document.getElementById('manualSyncBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Senkronize ediliyor…'; }
+  try {
+    await syncFromFirebase();
+    showToast('✓ Senkronizasyon tamamlandı');
+  } catch(e) {
+    showToast('❌ Senkronizasyon başarısız');
+    console.error(e);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Şimdi senkronize et'; }
+  }
 }
 
 async function saveToFirebase() {
@@ -1005,6 +1009,7 @@ async function saveToFirebase() {
 
 function scheduleSave() {
   rebuildPoolFromEntries();
+  localDb._savedAt = Date.now();
   setSaving(true);
   saveLocal();
   if (!currentUser || !db) { setSaving(false, true); return; }
