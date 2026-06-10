@@ -823,8 +823,13 @@ let searchQuery = '';
 
 // ── LOCAL STORAGE ──
 function loadLocal() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || emptyDb(); }
-  catch { return emptyDb(); }
+  try {
+    var data = localStorage.getItem(STORAGE_KEY);
+    if (data) return JSON.parse(data) || emptyDb();
+    var sess = sessionStorage.getItem(STORAGE_KEY);
+    if (sess) return JSON.parse(sess) || emptyDb();
+    return emptyDb();
+  } catch(e) { return emptyDb(); }
 }
 function emptyDb() { return { disease:[], finding:[], symptom:[], info:[], trash:[], pool:{ tanim:[], sorgu:[], bulgu:[], tetkik:[], tedavi:[], notlar:[] } }; }
 function ensureTrash() { if (!Array.isArray(localDb.trash)) localDb.trash = []; }
@@ -876,7 +881,11 @@ function rebuildPoolFromEntries() {
 // addToPool kaldırıldı — rebuildPoolFromEntries() her zaman pool'u sıfırdan inşa eder,
 // dolayısıyla ayrıca addToPool çağırmak gereksizdi.
 
-function saveLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(localDb)); if (typeof updateTrashBadge === 'function') updateTrashBadge(); }
+function saveLocal() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(localDb)); } catch(e) {}
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(localDb)); } catch(e) {}
+  if (typeof updateTrashBadge === 'function') updateTrashBadge();
+}
 
 // ── FIREBASE ──
 // ⚠️  GÜVENLİK NOTU: Bu yapılandırma public kaynak kodunda görünür durumdadır.
@@ -910,6 +919,13 @@ try {
   auth = firebase.auth();
   db = firebase.firestore();
 
+  // Redirect sonrası geri dönüşü yakala (Safari standalone için)
+  auth.getRedirectResult().catch(function(e) {
+    if (e.code !== 'auth/no-auth-event') {
+      showToast('❌ Giriş başarısız'); console.error(e);
+    }
+  });
+
   auth.onAuthStateChanged(async function(user) {
     if (user) {
       currentUser = user;
@@ -924,6 +940,7 @@ try {
     } else {
       currentUser = null;
       updateAuthUI(false, null);
+      renderAll();
     }
   });
 } catch(e) { /* Firebase yüklenemedi, yerel mod aktif */ }
@@ -1020,7 +1037,13 @@ function updateAuthUI(loggedIn, user) {
 function signInWithGoogle() {
   if (!auth) { showToast('Firebase bağlantısı yok'); return; }
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(function(e) { showToast('❌ Giriş başarısız'); console.error(e); });
+  // Safari standalone modda popup çalışmaz, redirect kullan
+  const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+  if (isStandalone) {
+    auth.signInWithRedirect(provider).catch(function(e) { showToast('❌ Giriş başarısız'); console.error(e); });
+  } else {
+    auth.signInWithPopup(provider).catch(function(e) { showToast('❌ Giriş başarısız'); console.error(e); });
+  }
 }
 
 function doSignOut() {
