@@ -919,10 +919,15 @@ try {
   auth = firebase.auth();
   db = firebase.firestore();
 
-  // Redirect sonrası geri dönüşü yakala (Safari standalone için)
-  auth.getRedirectResult().catch(function(e) {
-    if (e.code !== 'auth/no-auth-event') {
-      showToast('❌ Giriş başarısız'); console.error(e);
+  // Redirect sonrası geri dönüşü yakala
+  auth.getRedirectResult().then(function(result) {
+    if (result && result.user) {
+      showToast('✓ Giriş başarılı');
+    }
+  }).catch(function(e) {
+    if (e.code && e.code !== 'auth/no-auth-event') {
+      showToast('❌ Giriş hatası: ' + e.code);
+      console.error(e);
     }
   });
 
@@ -1037,13 +1042,20 @@ function updateAuthUI(loggedIn, user) {
 function signInWithGoogle() {
   if (!auth) { showToast('Firebase bağlantısı yok'); return; }
   const provider = new firebase.auth.GoogleAuthProvider();
-  // Safari standalone modda popup çalışmaz, redirect kullan
-  const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-  if (isStandalone) {
-    auth.signInWithRedirect(provider).catch(function(e) { showToast('❌ Giriş başarısız'); console.error(e); });
-  } else {
-    auth.signInWithPopup(provider).catch(function(e) { showToast('❌ Giriş başarısız'); console.error(e); });
-  }
+  provider.setCustomParameters({ prompt: 'select_account' });
+  auth.signInWithPopup(provider).then(function(result) {
+    if (result.user) showToast('✓ Giriş başarılı');
+  }).catch(function(e) {
+    console.error('Popup auth error:', e.code, e.message);
+    if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
+      // Popup engellenirse redirect'e geç
+      auth.signInWithRedirect(provider).catch(function(e2) {
+        showToast('❌ Giriş başarısız: ' + e2.message); console.error(e2);
+      });
+    } else {
+      showToast('❌ Giriş başarısız: ' + e.code);
+    }
+  });
 }
 
 function doSignOut() {
