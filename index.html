@@ -14,7 +14,7 @@
 <link rel="shortcut icon" href="icon.png?v=2">
 <style>
 :root {
-  --bg:#f5f2ee; --surface:#fff; --surface2:#faf8f5;
+  --bg:#f0ece6; --surface:#faf8f5; --surface2:#e8e3db;
   --border:#e4ddd4; --border2:#cec4b8;
   --text:#1a1714; --text2:#5c524a; --text3:#9c8f84;
   --dis:#c0392b; --dis-bg:#fdf0ee; --dis-border:#f5c6c0;
@@ -27,12 +27,11 @@
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
 header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;height:56px;}
-.logo{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--dis);flex-shrink:0;}
-.logo span{color:var(--text);}
-.search-wrap{position:relative;flex:1;margin-left:12px;}
-.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
-#searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
-#searchInput:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
+.logo-med{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--dis);flex-shrink:0;}
+.logo-log{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--text);flex-shrink:0;}
+.search-wrap{display:flex;align-items:center;gap:6px;flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;margin:0 12px;}
+.search-wrap svg{flex-shrink:0;color:var(--text3);}
+#searchInput{width:100%;background:transparent;border:none;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;}
 
 .hdr-btn{background:none;border:none;padding:0;margin:0;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;width:24px;height:24px;transition:opacity .15s;flex-shrink:0;}
 .hdr-btn svg{width:20px;height:20px;}
@@ -53,32 +52,32 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .s-head-title{font-family:'Lora',serif;font-size:17px;font-weight:600;}
 .s-close{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;color:var(--text3);font-size:14px;transition:all .15s;}
 .s-close:hover{background:var(--bg);}
-.s-body{flex:1;overflow-y:auto;padding:18px 20px;}
-.s-section{margin-bottom:22px;}
+.s-body{flex:1;overflow-y:auto;padding:10px 20px;}
+.s-section{margin-bottom:12px;}
 
 .s-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);font-family:'DM Mono',monospace;margin-bottom:10px;}
 .auth-block{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;}
 .auth-user-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.auth-avatar{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);object-fit:cover;flex-shrink:0;}
+.auth-avatar{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);object-fit:cover;flex-shrink:0;}
 .auth-name{font-size:14px;font-weight:700;color:var(--text);}
 .auth-email{font-size:12px;color:var(--text3);margin-left:6px;}
 .auth-note{font-size:12px;color:var(--text3);line-height:1.5;margin-bottom:10px;}
-.sync-badge{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;margin-bottom:7px;width:100%;border:1.5px solid var(--border);box-sizing:border-box;}
+.sync-badge{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;margin-bottom:6px;width:100%;border:1.5px solid var(--border);box-sizing:border-box;}
 .sync-badge.synced{background:#eafaf1;color:#1e8449;border:1.5px solid #a9dfbf;}
 .sync-badge.local{background:#fff8e1;color:#856404;border:1.5px solid #ffc107;}
-.sync-badge .dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;}
+.sync-badge .dot{width:26px;height:26px;border-radius:50%;flex-shrink:0;}
 .synced .dot{background:#27ae60;}
 .local .dot{background:#f39c12;}
-.s-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;margin-bottom:7px;}
+.s-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:var(--radius-sm);cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;margin-bottom:6px;}
 .s-btn:last-child{margin-bottom:0;}
 .s-btn:hover{background:var(--bg);border-color:var(--border2);}
-.s-btn.google{background:#fff;border-color:#ddd;color:#333;}
-.s-btn.google:hover{background:#f8f8f8;}
+.s-btn.google{background:var(--surface);border-color:#a8c8f0;color:#333;}
+.s-btn.google:hover{background:var(--bg);}
 .s-btn.danger{color:var(--dis);}
 .s-btn.danger:hover{background:var(--dis-bg);border-color:var(--dis-border);}
-.s-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.s-icon svg{width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-.s-divider{height:1px;background:var(--border);margin:10px 0;}
+.s-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s-icon svg{width:14px;height:14px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.s-divider{height:1px;background:var(--border);margin:4px 0;}
 
 .tab-nav{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 14px;position:sticky;top:56px;z-index:90;}
 .tab-btn{padding:12px 16px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:color .15s;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;}
@@ -373,12 +372,12 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 
 <div id="appScreen">
   <header>
-    <div class="logo">Med<span>Log</span></div>
+    <span class="logo-med">Med</span>
     <div class="search-wrap">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input id="searchInput" type="search" placeholder="Ara…" autocomplete="off">
     </div>
-
+    <span class="logo-log">Log</span>
   </header>
 
   <nav class="tab-nav">
@@ -435,13 +434,11 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <div class="saving-dot" id="savingDot" style="margin-left:auto;margin-right:10px"></div>
       <button class="s-close" onclick="closeSettings()">✕</button>
     </div>
-    <div class="s-body">
-      <div class="s-section">
-        <div class="s-section-title">Hesap & Senkronizasyon</div>
+    <div class="s-body" style="padding:10px 16px 32px;">
         <div id="authLoggedOut">
           <div class="sync-badge local"><span class="dot"></span> Yerel kayıt (sadece bu cihaz)</div>
           <button class="s-btn google" onclick="signInWithGoogle()">
-            <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            <svg width="26" height="26" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
             Google ile giriş yap
           </button>
         </div>
@@ -454,53 +451,38 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
             </div>
           </div>
           <div class="sync-badge synced"><span class="dot"></span> Firebase ile senkronize</div>
-          <button class="s-btn" id="manualSyncBtn" onclick="manualSync()"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>Şimdi senkronize et</button>
-          <button class="s-btn danger" onclick="doSignOut()"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>Çıkış yap</button>
+          <button class="s-btn" id="manualSyncBtn" onclick="manualSync()" style="border-color:#a8d0ed;"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>Şimdi senkronize et</button>
+          <button class="s-btn danger" onclick="doSignOut()" style="border-color:#f5c6c0;"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>Çıkış yap</button>
         </div>
-      </div>
-      <div class="s-divider"></div>
-      <div class="s-section">
-        <div class="s-section-title">Veri Yönetimi</div>
-        <button class="s-btn" onclick="showStatsInSettings()"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>İstatistikler</button>
-        <button class="s-btn" onclick="closeSettings();openPoolViewer()"><span class="s-icon" style="background:#d35400"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Madde havuzu</button>
-        <button class="s-btn" onclick="exportData()"><span class="s-icon" style="background:#1a7a6e"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Dışa aktar (JSON)</button>
-        <button class="s-btn" onclick="document.getElementById('importFile').click()"><span class="s-icon" style="background:#8e44ad"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>İçe aktar (JSON)</button>
-        <div id="statsBody" style="display:none;margin-top:12px;"></div>
-      <div class="s-divider"></div>
-      <div class="s-section">
-        <div class="s-section-title">Belge İndir</div>
-        <div class="s-row-label">Kapsam</div>
-        <div style="display:flex;gap:4px;margin-bottom:10px;">
+        <div style="height:1px;background:var(--border);margin:8px 0;"></div>
+        <button class="s-btn" onclick="showStatsInSettings()" style="border-color:#a8d0ed;"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>İstatistikler</button>
+        <div id="statsBody" style="display:none;margin-bottom:5px;"></div>
+        <button class="s-btn" onclick="closeSettings();openPoolViewer()" style="border-color:#f0b27a;"><span class="s-icon" style="background:#d35400"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Madde havuzu</button>
+        <button class="s-btn" onclick="exportData()" style="border-color:#a8d8d2;"><span class="s-icon" style="background:#1a7a6e"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Dışa aktar (JSON)</button>
+        <button class="s-btn" onclick="document.getElementById('importFile').click()" style="border-color:#c39bd3;"><span class="s-icon" style="background:#8e44ad"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>İçe aktar (JSON)</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <div style="height:1px;background:var(--border);margin:8px 0;"></div>
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
           <button class="s-chip active" id="escope-all" onclick="setExportScope('all')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Tümü</button>
           <button class="s-chip" id="escope-disease" onclick="setExportScope('disease')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Hastalık</button>
           <button class="s-chip" id="escope-finding" onclick="setExportScope('finding')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Bulgu</button>
           <button class="s-chip" id="escope-symptom" onclick="setExportScope('symptom')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Belirti</button>
           <button class="s-chip" id="escope-info" onclick="setExportScope('info')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Bilgi</button>
         </div>
-        <div class="s-row-label">Format</div>
-        <div style="display:flex;gap:4px;margin-bottom:10px;">
+        <div style="display:flex;gap:4px;margin-bottom:6px;">
           <button class="s-chip" id="efmt-both" onclick="setExportFormat('both')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Hepsi</button>
           <button class="s-chip active" id="efmt-pdf" onclick="setExportFormat('pdf')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">PDF</button>
           <button class="s-chip" id="efmt-doc" onclick="setExportFormat('doc')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">Word</button>
           <button class="s-chip" id="efmt-txt" onclick="setExportFormat('txt')" style="flex:1;padding:4px 2px;font-size:11px;text-align:center;">TXT</button>
         </div>
-        <button class="s-btn" onclick="doExport()" style="background:var(--dis);color:white;border-color:var(--dis);">İndir</button>
-      </div>
-      <div class="s-divider"></div>
-      <div class="s-section">
-        <div class="s-section-title">Tehlikeli Bölge</div>
-        <button class="s-btn" onclick="openTrash();closeSettings();"><span class="s-icon" style="background:#5c524a"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Çöp kutusu <span id="trash-badge" style="margin-left:auto;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);"></span></button>
-        <button class="s-btn danger" onclick="clearAllData()"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Tüm verileri sil</button>
-      </div>
-      <div class="s-divider"></div>
-      <div class="s-section">
-        <div class="s-section-title">Uygulama</div>
-        <div style="font-size:12px;color:var(--text3);line-height:1.7;">MedLog @ iclalcakir</div>
-      </div>
+        <button class="s-btn" onclick="doExport()" style="background:var(--dis);color:white;border-color:var(--dis);">Belge indir</button>
+        <div style="height:1px;background:var(--border);margin:8px 0;"></div>
+        <button class="s-btn" onclick="openTrash();closeSettings();" style="border-color:#cec4b8;"><span class="s-icon" style="background:#5c524a"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Çöp kutusu <span id="trash-badge" style="margin-left:auto;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);"></span></button>
+        <button class="s-btn danger" onclick="clearAllData()" style="border-color:#f5c6c0;"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Tüm verileri sil</button>
+        <div style="margin-top:12px;font-size:11px;color:var(--text3);text-align:center;">MedLog @ iclalcakir</div>
     </div>
   </div>
 </div>
-
 <!-- ENTRY MODAL -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal" onclick="event.stopPropagation()">
