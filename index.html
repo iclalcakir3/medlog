@@ -26,14 +26,14 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 12px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:8px;height:56px;}
-.logo{font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--dis);flex-shrink:0;min-width:72px;}
+header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;height:56px;}
+.logo{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--dis);flex-shrink:0;}
 .logo span{color:var(--text);}
-.search-wrap{position:relative;flex:1;}
+.search-wrap{position:relative;flex:1;margin-left:12px;}
 .search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
 #searchInput{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;padding:8px 14px 8px 36px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
 #searchInput:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
-.header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:72px;justify-content:flex-end;}
+
 .hdr-btn{background:none;border:none;padding:0;margin:0;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;width:24px;height:24px;transition:opacity .15s;flex-shrink:0;}
 .hdr-btn svg{width:20px;height:20px;}
 .hdr-btn:hover{opacity:.55;}
@@ -69,17 +69,19 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .sync-badge .dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;}
 .synced .dot{background:#27ae60;}
 .local .dot{background:#f39c12;}
-.s-btn{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;margin-bottom:7px;}
+.s-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s;margin-bottom:7px;}
 .s-btn:last-child{margin-bottom:0;}
 .s-btn:hover{background:var(--bg);border-color:var(--border2);}
 .s-btn.google{background:#fff;border-color:#ddd;color:#333;}
 .s-btn.google:hover{background:#f8f8f8;}
 .s-btn.danger{color:var(--dis);}
 .s-btn.danger:hover{background:var(--dis-bg);border-color:var(--dis-border);}
+.s-icon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.s-icon svg{width:13px;height:13px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 .s-divider{height:1px;background:var(--border);margin:10px 0;}
 
 .tab-nav{display:flex;background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 14px;position:sticky;top:56px;z-index:90;}
-.tab-btn{padding:12px 16px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:color .15s;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;}
+.tab-btn{padding:12px 16px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--text2);cursor:pointer;border:none;background:none;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:color .15s;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;}
 .tab-btn .tab-dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex-shrink:0;vertical-align:middle;margin-bottom:1px;}
 .tab-btn[data-tab="disease"]:hover,.tab-btn[data-tab="disease"].active{color:var(--dis);}
 .tab-btn[data-tab="finding"]:hover,.tab-btn[data-tab="finding"].active{color:var(--fin);}
@@ -97,13 +99,13 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .info-item-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);}
 .info-item-row:last-child{border-bottom:none;}
 .info-item-dot{width:5px;height:5px;border-radius:50%;background:#b7860b;flex-shrink:0;margin-top:7px;}
-.info-item-text{flex:1;font-size:13px;color:var(--text2);line-height:1.5;}
+.info-item-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
 .info-item-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;line-height:1;padding:0;flex-shrink:0;margin-top:2px;transition:color .15s;}
 .info-item-del:hover{color:var(--dis);}
 .info-body-item{display:flex;align-items:flex-start;gap:8px;padding:7px 16px;transition:background .15s;}
 .info-body-item:hover{background:var(--surface2);}
 .info-body-dot{width:5px;height:5px;border-radius:50%;background:#b7860b;opacity:.7;flex-shrink:0;margin-top:7px;}
-.info-body-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
+.info-body-text{flex:1;font-size:15px;color:var(--text2);line-height:1.5;}
 .info-body-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
 .info-body-item:hover .info-body-del{opacity:1;}
 .info-body-del:hover{color:var(--dis);}
@@ -154,7 +156,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 #mainView.hidden{display:none;}
 
 
-.add-entry-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:13px 16px;margin-bottom:14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text3);transition:all .15s;width:100%;}
+.add-entry-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px dashed var(--border2);border-radius:var(--radius);padding:13px 16px;margin-bottom:14px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--text3);transition:all .15s;width:100%;}
 .add-entry-btn.disease:hover{border-color:var(--dis);color:var(--dis);background:var(--dis-bg);}
 .add-entry-btn.finding:hover{border-color:var(--fin);color:var(--fin);background:var(--fin-bg);}
 .add-entry-btn.symptom:hover{border-color:var(--sym);color:var(--sym);background:var(--sym-bg);}
@@ -169,7 +171,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .disease .e-dot{background:var(--dis);}
 .finding .e-dot{background:var(--fin);}
 .symptom .e-dot{background:var(--sym);}
-.e-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--text);flex:1;}
+.e-title{font-family:'Lora',serif;font-size:17px;font-weight:600;color:var(--text);flex:1;}
 .e-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;opacity:0;transition:opacity .15s,color .15s;padding:2px 4px;}
 .entry-header:hover .e-del{opacity:1;}
 .e-del:hover{color:var(--dis);}
@@ -185,7 +187,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 .item-row{display:flex;align-items:flex-start;gap:8px;padding:7px 16px 7px 32px;transition:background .15s;}
 .item-row:hover{background:var(--surface2);}
 .i-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:7px;opacity:.4;background:var(--text2);}
-.i-text{flex:1;font-size:14px;color:var(--text2);line-height:1.5;}
+.i-text{flex:1;font-size:15px;color:var(--text2);line-height:1.5;}
 .i-del{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;opacity:0;transition:opacity .15s,color .15s;padding:0 2px;line-height:1;flex-shrink:0;margin-top:2px;}
 .item-row:hover .i-del{opacity:1;}
 .i-del:hover{color:var(--dis);}
@@ -197,7 +199,7 @@ header{background:var(--surface);border-bottom:1.5px solid var(--border);padding
 @media(min-width:600px){.modal{border-radius:var(--radius);max-height:85vh;}}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
 .modal-header{padding:18px 20px 14px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.modal-header-title{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--text);flex:1;}
+.modal-header-title{font-family:'Lora',serif;font-size:17px;font-weight:600;color:var(--text);flex:1;}
 .modal-close{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer;color:var(--text3);font-size:14px;transition:all .15s;}
 .modal-close:hover{background:var(--bg);}
 .modal-body{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:16px;}
@@ -332,82 +334,6 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 .fab svg{width:22px;height:22px;stroke:white;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 
 
-/* ── SINAV ── */
-.exam-screen{position:fixed;inset:0;z-index:400;background:var(--bg);display:none;flex-direction:column;}
-.exam-screen.open{display:flex;}
-.exam-header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;gap:14px;flex-shrink:0;}
-.exam-header-title{font-family:'Lora',serif;font-size:17px;font-weight:600;flex:1;}
-.exam-close-btn{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 12px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text3);transition:all .15s;}
-.exam-close-btn:hover{background:var(--bg);}
-.exam-progress-bar{height:4px;background:var(--border);flex-shrink:0;}
-.exam-progress-fill{height:100%;background:var(--dis);transition:width .4s ease;border-radius:0 2px 2px 0;}
-.exam-body{flex:1;overflow-y:auto;padding:24px 20px;max-width:600px;width:100%;margin:0 auto;}
-
-/* Başlangıç ekranı */
-.exam-start{display:flex;flex-direction:column;gap:18px;}
-.exam-start-title{font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.exam-start-desc{font-size:14px;color:var(--text3);line-height:1.6;}
-.exam-option-group{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.exam-option-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;font-family:'DM Mono',monospace;color:var(--text3);padding:12px 16px 6px;}
-.exam-option-row{display:flex;align-items:center;padding:10px 16px;gap:10px;border-top:1px solid var(--border);cursor:pointer;transition:background .15s;}
-.exam-option-row:first-of-type{border-top:none;}
-.exam-option-row:hover{background:var(--bg);}
-.exam-option-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--dis);cursor:pointer;flex-shrink:0;}
-.exam-option-row label{font-size:14px;color:var(--text2);font-weight:600;cursor:pointer;flex:1;}
-.exam-count-row{display:flex;align-items:center;gap:12px;padding:10px 16px;}
-.exam-count-row label{font-size:14px;color:var(--text2);font-weight:600;flex:1;}
-.exam-count-row input[type=range]{flex:1;accent-color:var(--dis);}
-.exam-count-val{font-size:14px;font-weight:800;color:var(--dis);font-family:'Nunito',sans-serif;min-width:28px;text-align:right;}
-.exam-start-btn{border:none;border-radius:var(--radius);padding:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:white;background:var(--dis);cursor:pointer;transition:opacity .15s;width:100%;}
-.exam-start-btn:hover{opacity:.88;}
-.exam-start-btn:disabled{opacity:.4;cursor:not-allowed;}
-
-/* Soru ekranı */
-.exam-q-meta{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.exam-q-num{font-size:12px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);}
-.exam-q-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.4px;}
-.exam-q-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:18px;box-shadow:var(--shadow);}
-.exam-q-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:8px;}
-.exam-q-text{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--text);line-height:1.4;}
-.exam-q-sub{font-size:13px;color:var(--text3);margin-top:6px;}
-
-/* Çoktan seçmeli */
-.exam-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
-.exam-choice{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;text-align:left;font-family:'Nunito',sans-serif;width:100%;}
-.exam-choice:hover:not(:disabled){border-color:var(--dis);color:var(--dis);background:var(--dis-bg);}
-.exam-choice.correct{border-color:#27ae60;background:#eafaf1;color:#1a7a4a;}
-.exam-choice.wrong{border-color:var(--dis);background:var(--dis-bg);color:var(--dis);}
-.exam-choice:disabled{cursor:default;}
-
-/* Açık uçlu */
-.exam-open-wrap{margin-bottom:20px;}
-.exam-open-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s;resize:none;}
-.exam-open-input:focus{border-color:var(--dis);box-shadow:0 0 0 3px var(--dis-bg);}
-.exam-open-btn{border:none;border-radius:var(--radius-sm);padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:white;background:var(--dis);cursor:pointer;transition:opacity .15s;}
-.exam-open-btn:hover{opacity:.88;}
-.exam-feedback{border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.6;}
-.exam-feedback.correct{background:#eafaf1;border:1.5px solid #a9dfbf;color:#1a7a4a;}
-.exam-feedback.partial{background:#fef9e7;border:1.5px solid #f9e79f;color:#7d6608;}
-.exam-feedback.wrong{background:var(--dis-bg);border:1.5px solid var(--dis-border);color:var(--dis);}
-.exam-feedback-title{font-weight:800;margin-bottom:6px;font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
-.exam-feedback-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-.exam-feedback-chip{font-size:12px;padding:3px 10px;border-radius:10px;font-weight:700;}
-.exam-feedback-chip.hit{background:#a9dfbf;color:#1a7a4a;}
-.exam-feedback-chip.miss{background:var(--dis-border);color:var(--dis);}
-.exam-next-btn{border:none;border-radius:var(--radius-sm);padding:11px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:white;background:var(--fin);cursor:pointer;transition:opacity .15s;width:100%;}
-.exam-next-btn:hover{opacity:.88;}
-
-/* Sonuç ekranı */
-.exam-result{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 0;}
-.exam-result-score{font-size:64px;font-weight:800;font-family:'Nunito',sans-serif;color:var(--dis);line-height:1;}
-.exam-result-label{font-size:14px;color:var(--text3);font-weight:700;}
-.exam-result-detail{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px 20px;width:100%;}
-.exam-result-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
-.exam-result-row:last-child{border-bottom:none;}
-.exam-result-restart{border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:white;background:var(--dis);cursor:pointer;width:100%;transition:opacity .15s;}
-.exam-result-restart:hover{opacity:.88;}
-.exam-result-back{background:none;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text2);cursor:pointer;width:100%;transition:all .15s;}
-.exam-result-back:hover{background:var(--bg);}
 
 #ptr-indicator{
   position:fixed;top:0;left:0;right:0;
@@ -452,17 +378,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input id="searchInput" type="search" placeholder="Ara…" autocomplete="off">
     </div>
-    <div class="header-right">
-      <button class="hdr-btn" onclick="openExam()" title="Sınav">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      </button>
-      <button class="hdr-btn" onclick="openStatsModal()" title="İstatistikler">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      </button>
-      <button class="hdr-btn" onclick="openSettings()" title="Ayarlar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-    </div>
+
   </header>
 
   <nav class="tab-nav">
@@ -502,68 +418,13 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
   </div>
 </div>
 
-<!-- SINAV EKRANI -->
-<div class="exam-screen" id="examScreen">
-  <div class="exam-header">
-    <span class="exam-header-title" id="examHeaderTitle"></span>
-    <button class="exam-close-btn" onclick="closeExam()">✕ Çık</button>
-  </div>
-  <div class="exam-progress-bar"><div class="exam-progress-fill" id="examProgressFill" style="width:0%"></div></div>
-  <div class="exam-body" id="examBody"></div>
-</div>
 
 
-<button class="fab" id="fabBtn" onclick="openQuickNote()" title="Hızlı not">
-  <svg viewBox="0 0 24 24" id="fabIcon" width="22" height="22" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+<button class="fab" id="fabBtn" onclick="openSettings()" title="Ayarlar">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
 </button>
 
-<!-- İSTATİSTİK DRAWER -->
-<div class="settings-panel" id="statsPanel">
-  <div class="s-backdrop" onclick="closeStatsModal()"></div>
-  <div class="s-drawer">
-    <div class="s-head">
-      <span class="s-head-title">İstatistikler</span>
-      <button class="s-close" onclick="closeStatsModal()">✕</button>
-    </div>
-    <div class="s-body" id="statsBody"></div>
-  </div>
-</div>
 
-<!-- HIZLI NOT MODALİ -->
-<div class="overlay" id="quickNoteOverlay" onclick="if(event.target===this)closeQuickNote()">
-  <div class="modal" style="max-width:480px;">
-    <div class="modal-header">
-      <span class="modal-header-title">Hızlı Not</span>
-      <button class="modal-close" onclick="closeQuickNote()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="mfield">
-        <label style="color:var(--sym)">Kategori</label>
-        <select id="qn-type" style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;">
-          <option value="disease">Hastalık</option>
-          <option value="finding">Bulgu</option>
-          <option value="symptom">Belirti</option>
-          <option value="info">Bilgi Kartı</option>
-        </select>
-      </div>
-      <div class="mfield">
-        <label style="color:var(--sym)">Başlık</label>
-        <input id="qn-title" type="text" placeholder="Kart başlığı…" autocomplete="off">
-      </div>
-      <div class="mfield">
-        <label style="color:var(--sym)">Not</label>
-        <textarea id="qn-note" rows="4" placeholder="Hızlı not…" style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);background:var(--surface2);outline:none;resize:vertical;transition:border-color .2s;"></textarea>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeQuickNote()">İptal</button>
-      <button class="btn-save disease" onclick="saveQuickNote()">Kaydet</button>
-    </div>
-  </div>
-</div>
-
-<!-- PRINT AREA -->
-<div id="printArea"></div>
 
 <!-- SETTINGS -->
 <div class="settings-panel" id="settingsPanel">
@@ -577,36 +438,34 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
     <div class="s-body">
       <div class="s-section">
         <div class="s-section-title">Hesap & Senkronizasyon</div>
-        <div class="auth-block">
-          <div id="authLoggedOut">
-            <div class="auth-note">Google ile giriş yaparak verilerini tüm cihazlarında senkronize et.</div>
-            <div class="sync-badge local"><span class="dot"></span> Yerel kayıt (sadece bu cihaz)</div>
-            <button class="s-btn google" onclick="signInWithGoogle()">
-              <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-              Google ile giriş yap
-            </button>
-          </div>
-          <div id="authLoggedIn" style="display:none">
-            <div class="auth-user-row">
-              <img class="auth-avatar" id="authAvatar" src="" alt="">
-              <div>
-                <div class="auth-name" id="authName"></div>
-                <div class="auth-email" id="authEmail"></div>
-              </div>
+        <div id="authLoggedOut">
+          <div class="sync-badge local"><span class="dot"></span> Yerel kayıt (sadece bu cihaz)</div>
+          <button class="s-btn google" onclick="signInWithGoogle()">
+            <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Google ile giriş yap
+          </button>
+        </div>
+        <div id="authLoggedIn" style="display:none">
+          <div class="auth-user-row">
+            <img class="auth-avatar" id="authAvatar" src="" alt="">
+            <div>
+              <div class="auth-name" id="authName"></div>
+              <div class="auth-email" id="authEmail"></div>
             </div>
-            <div class="sync-badge synced"><span class="dot"></span> Firebase ile senkronize</div>
-            <button class="s-btn" id="manualSyncBtn" onclick="manualSync()">🔄 Şimdi senkronize et</button>
-            <button class="s-btn danger" onclick="doSignOut()">🚪 Çıkış yap</button>
           </div>
+          <div class="sync-badge synced"><span class="dot"></span> Firebase ile senkronize</div>
+          <button class="s-btn" id="manualSyncBtn" onclick="manualSync()"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></span>Şimdi senkronize et</button>
+          <button class="s-btn danger" onclick="doSignOut()"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>Çıkış yap</button>
         </div>
       </div>
       <div class="s-divider"></div>
       <div class="s-section">
         <div class="s-section-title">Veri Yönetimi</div>
-        <button class="s-btn" onclick="exportData()">📤 Dışa aktar (JSON)</button>
-        <button class="s-btn" onclick="document.getElementById('importFile').click()">📥 İçe aktar (JSON)</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-      </div>
+        <button class="s-btn" onclick="showStatsInSettings()"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>İstatistikler</button>
+        <button class="s-btn" onclick="closeSettings();openPoolViewer()"><span class="s-icon" style="background:#d35400"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Madde havuzu</button>
+        <button class="s-btn" onclick="exportData()"><span class="s-icon" style="background:#1a7a6e"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Dışa aktar (JSON)</button>
+        <button class="s-btn" onclick="document.getElementById('importFile').click()"><span class="s-icon" style="background:#8e44ad"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>İçe aktar (JSON)</button>
+        <div id="statsBody" style="display:none;margin-top:12px;"></div>
       <div class="s-divider"></div>
       <div class="s-section">
         <div class="s-section-title">Belge İndir</div>
@@ -630,8 +489,8 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
       <div class="s-divider"></div>
       <div class="s-section">
         <div class="s-section-title">Tehlikeli Bölge</div>
-        <button class="s-btn" onclick="openTrash();closeSettings();">🗑 Çöp kutusu <span id="trash-badge" style="margin-left:auto;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);"></span></button>
-        <button class="s-btn danger" onclick="clearAllData()">🗑 Tüm verileri sil</button>
+        <button class="s-btn" onclick="openTrash();closeSettings();"><span class="s-icon" style="background:#5c524a"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Çöp kutusu <span id="trash-badge" style="margin-left:auto;font-size:10px;font-weight:800;font-family:'DM Mono',monospace;color:var(--text3);"></span></button>
+        <button class="s-btn danger" onclick="clearAllData()"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></span>Tüm verileri sil</button>
       </div>
       <div class="s-divider"></div>
       <div class="s-section">
@@ -2703,44 +2562,22 @@ document.addEventListener('click', function(e) {
   if (!e.target.closest('#fabBtn')) closeFabMenu();
 });
 
-// ── HIZLI NOT ──
-function openQuickNote() {
-  closeFabMenu();
-  document.getElementById('qn-title').value = '';
-  document.getElementById('qn-note').value = '';
-  document.getElementById('quickNoteOverlay').classList.add('open');
-  setTimeout(function(){ document.getElementById('qn-title').focus(); }, 120);
-}
-function closeQuickNote() {
-  document.getElementById('quickNoteOverlay').classList.remove('open');
-}
-function saveQuickNote() {
-  var type = document.getElementById('qn-type').value;
-  var title = document.getElementById('qn-title').value.trim();
-  var note = document.getElementById('qn-note').value.trim();
-  if (!title) { showToast('Başlık gir'); document.getElementById('qn-title').focus(); return; }
-  if (type === 'info') {
-    var entry = { id: crypto.randomUUID(), title: title, items: note ? [note] : [] };
-    localDb.info.unshift(entry);
-  } else {
-    var entry = { id: crypto.randomUUID(), title: title, tanim:[], sorgu:[], tetkik:[], notlar: note ? [note] : [] };
-    localDb[type].unshift(entry);
-  }
-  scheduleSave();
-  rebuildPoolFromEntries();
-  renderAll();
-  closeQuickNote();
-  showToast('✓ Eklendi');
-}
 
 // ── İSTATİSTİKLER ──
 function openStatsModal() {
-  closeFabMenu();
   renderStats();
-  document.getElementById('statsPanel').classList.add('open');
+  openSettings();
+  var sb = document.getElementById('statsBody');
+  if (sb) sb.style.display = 'block';
 }
 function closeStatsModal() {
-  document.getElementById('statsPanel').classList.remove('open');
+  var sb = document.getElementById('statsBody');
+  if (sb) sb.style.display = 'none';
+}
+function showStatsInSettings() {
+  renderStats();
+  var sb = document.getElementById('statsBody');
+  if (sb) sb.style.display = sb.style.display === 'none' ? 'block' : 'none';
 }
 function renderStats() {
   var dis = localDb.disease || [];
@@ -2794,10 +2631,7 @@ function renderStats() {
     + statRow('Toplam madde', totalItems, 'var(--text2)')
     + statRow('Havuz maddesi', poolTotal, 'var(--text2)')
     + '</div>'
-    + '<div class="s-divider"></div>'
-    + '<div class="s-section">'
-    + '<button class="s-btn" onclick="closeStatsModal();openPoolViewer()">🗂 Madde havuzunu görüntüle</button>'
-    + '</div>';
+    + '<div class="s-divider"></div>';
 
   document.getElementById('statsBody').innerHTML = html;
 }
@@ -2808,265 +2642,6 @@ function statRow(label, val, color) {
     + '</div>';
 }
 
-// ── SINAV ──
-var examState = null;
-
-function openExam() {
-  examState = null;
-  document.getElementById('examScreen').classList.add('open');
-  renderExamStart();
-}
-
-function closeExam() {
-  document.getElementById('examScreen').classList.remove('open');
-  examState = null;
-}
-
-function renderExamStart() {
-  document.getElementById('examProgressFill').style.width = '0%';
-  document.getElementById('examHeaderTitle').textContent = '';
-  var totalCards = (localDb.disease||[]).length + (localDb.finding||[]).length + (localDb.symptom||[]).length + (localDb.info||[]).length;
-  if (totalCards < 1) {
-    document.getElementById('examBody').innerHTML = '<div class="empty-state"><div class="ei">📭</div><h3>Yeterli veri yok</h3><p>Sınav için önce en az bir kart ekle.</p></div>';
-    return;
-  }
-  var defaultQ = 10;
-  document.getElementById('examBody').innerHTML =
-    '<div class="exam-start">' +
-    '<div><div class="exam-start-title">Sınav Modu</div><div class="exam-start-desc">Kartlarından rastgele sorular üretilecek. Hem çoktan seçmeli hem açık uçlu sorular gelecek.</div></div>' +
-    '<div class="exam-option-group">' +
-      '<div class="exam-option-label">Kategoriler</div>' +
-      examCatRow('ex-dis', 'Hastalık', (localDb.disease||[]).length) +
-      examCatRow('ex-fin', 'Bulgu', (localDb.finding||[]).length) +
-      examCatRow('ex-sym', 'Belirti', (localDb.symptom||[]).length) +
-      examCatRow('ex-inf', 'Bilgi Kartı', (localDb.info||[]).length) +
-    '</div>' +
-    '<div class="exam-option-group">' +
-      '<div class="exam-option-label">Soru sayısı</div>' +
-      '<div class="exam-count-row"><label>Sorular</label><input type="range" id="ex-count" min="1" max="100" value="' + defaultQ + '" step="1" oninput="document.getElementById(\'ex-count-val\').textContent=this.value"><span class="exam-count-val" id="ex-count-val">' + defaultQ + '</span></div>' +
-    '</div>' +
-    '<button class="exam-start-btn" onclick="startExam()">Sınavı Başlat →</button>' +
-    '</div>';
-}
-
-function examCatRow(id, label, count) {
-  var isDisabled = count === 0;
-  var checked = !isDisabled ? 'checked' : '';
-  return '<div class="exam-option-row" onclick="var cb=document.getElementById(\'' + id + '\');if(!cb.disabled){cb.checked=!cb.checked;}">' +
-    '<input type="checkbox" id="' + id + '" ' + checked + (isDisabled?' disabled':'') + ' onclick="event.stopPropagation()" style="pointer-events:none;">' +
-    '<label for="' + id + '" onclick="event.preventDefault()" style="' + (isDisabled?'opacity:.4':'') + '">' + label + ' <span style="font-size:11px;color:var(--text3);font-weight:400;">(' + count + ' kart)</span></label>' +
-    '</div>';
-}
-
-function startExam() {
-  var cats = [];
-  if (document.getElementById('ex-dis') && document.getElementById('ex-dis').checked) cats.push('disease');
-  if (document.getElementById('ex-fin') && document.getElementById('ex-fin').checked) cats.push('finding');
-  if (document.getElementById('ex-sym') && document.getElementById('ex-sym').checked) cats.push('symptom');
-  if (document.getElementById('ex-inf') && document.getElementById('ex-inf').checked) cats.push('info');
-  if (!cats.length) { showToast('En az bir kategori seç'); return; }
-
-  var count = parseInt(document.getElementById('ex-count').value);
-  var questions = buildQuestions(cats, count);
-  if (!questions.length) { showToast('Soru üretilemedi, daha fazla kart ekle'); return; }
-
-  examState = { questions: questions, current: 0, score: 0, correct: 0, partial: 0, wrong: 0, answered: false };
-  document.getElementById('examHeaderTitle').textContent = 'Sınav';
-  renderExamQuestion();
-}
-
-function buildQuestions(cats, count) {
-  var pool = [];
-  var typeLabels = { disease:'Hastalık', finding:'Bulgu', symptom:'Belirti', info:'Bilgi Kartı' };
-  var typeColors = { disease:'var(--dis)', finding:'var(--fin)', symptom:'var(--sym)', info:'#b7860b' };
-
-  cats.forEach(function(cat) {
-    var entries = (localDb[cat] || []);
-    entries.forEach(function(entry) {
-      var fields = cat === 'info' ? ['items'] : ['tanim','sorgu','tetkik','notlar'];
-      var allItems = [];
-      if (cat === 'info') {
-        migrateInfoItems(entry.items||[]).forEach(function(g){ (g.maddeler||[]).forEach(function(v){ allItems.push({field:'items',val:v}); }); });
-      } else {
-        fields.forEach(function(f){ (entry[f]||[]).forEach(function(v){ allItems.push({field:f,val:v}); }); });
-      }
-      if (!allItems.length) return;
-
-      // Tip A: Hastalık → madde sor (çoktan seçmeli veya açık uçlu)
-      if (Math.random() > 0.4) {
-        // Çoktan seçmeli: hangi madde bu kartın?
-        var correctItem = allItems[Math.floor(Math.random()*allItems.length)];
-        // Yanlış seçenekler: diğer kartlardan
-        var wrongs = [];
-        var others = (localDb[cat]||[]).filter(function(e){ return e.id !== entry.id; });
-        shuffle(others).slice(0,5).forEach(function(o){
-          if (cat === 'info') {
-            migrateInfoItems(o.items||[]).forEach(function(g){ (g.maddeler||[]).forEach(function(v){ wrongs.push(v); }); });
-          } else {
-            var oFields = ['tanim','sorgu','tetkik','notlar'];
-            oFields.forEach(function(f){ (o[f]||[]).forEach(function(v){ wrongs.push(v); }); });
-          }
-        });
-        wrongs = shuffle(wrongs).slice(0,3);
-        if (wrongs.length < 1) return;
-        var choices = shuffle([correctItem.val].concat(wrongs));
-        pool.push({ type:'mc-item', cat:cat, catLabel:typeLabels[cat], catColor:typeColors[cat],
-          question: '"' + entry.title + '" kartına ait madde hangisidir?',
-          choices: choices, correct: correctItem.val, entry: entry });
-      } else {
-        // Açık uçlu: kartın maddelerini yaz
-        var fieldLabel = { tanim:'Tanımları', sorgu:'Sorguları', tetkik:'Tetkikleri', notlar:'Notları', items:'Maddelerini' };
-        var field = fields[Math.floor(Math.random()*fields.length)];
-        var items = cat === 'info' ? allItems.map(function(x){return x.val;}) : (entry[field]||[]);
-        if (!items.length) { items = allItems.map(function(x){return x.val;}); }
-        if (!items.length) return;
-        pool.push({ type:'open', cat:cat, catLabel:typeLabels[cat], catColor:typeColors[cat],
-          question: '"' + entry.title + '" kartının ' + (fieldLabel[field]||'maddelerini') + ' yaz.',
-          answers: items, entry: entry });
-      }
-
-      // Tip B: Madde → hangi kart?
-      if (allItems.length && cats.filter(function(c){ return (localDb[c]||[]).length>1; }).length > 0) {
-        var item = allItems[Math.floor(Math.random()*allItems.length)];
-        var wrongEntries = shuffle((localDb[cat]||[]).filter(function(e){ return e.id !== entry.id; })).slice(0,3);
-        if (wrongEntries.length < 1) return;
-        var entryChoices = shuffle([entry].concat(wrongEntries)).map(function(e){ return e.title; });
-        pool.push({ type:'mc-card', cat:cat, catLabel:typeLabels[cat], catColor:typeColors[cat],
-          question: '"' + item.val + '" hangi kartın maddesidir?',
-          choices: entryChoices, correct: entry.title, entry: entry });
-      }
-    });
-  });
-
-  return shuffle(pool).slice(0, count);
-}
-
-function shuffle(arr) {
-  var a = arr.slice();
-  for (var i = a.length-1; i > 0; i--) { var j = Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; }
-  return a;
-}
-
-function renderExamQuestion() {
-  var s = examState;
-  var q = s.questions[s.current];
-  var pct = Math.round((s.current / s.questions.length) * 100);
-  document.getElementById('examProgressFill').style.width = pct + '%';
-  document.getElementById('examHeaderTitle').textContent = (s.current+1) + ' / ' + s.questions.length;
-  s.answered = false;
-
-  var badgeStyle = 'background:' + (q.catColor==='var(--dis)'?'var(--dis-bg)':q.catColor==='var(--fin)'?'var(--fin-bg)':q.catColor==='var(--sym)'?'var(--sym-bg)':'#fdf6e3') + ';color:' + q.catColor;
-  var metaHtml = '<div class="exam-q-meta"><span class="exam-q-num">SORU ' + (s.current+1) + '</span><span class="exam-q-badge" style="' + badgeStyle + '">' + q.catLabel + '</span></div>';
-  var cardHtml = '<div class="exam-q-card"><div class="exam-q-label">Soru</div><div class="exam-q-text">' + esc(q.question) + '</div></div>';
-
-  var answerHtml = '';
-  if (q.type === 'mc-item' || q.type === 'mc-card') {
-    answerHtml = '<div class="exam-choices">' +
-      q.choices.map(function(c, i) {
-        return '<button class="exam-choice" id="choice-'+i+'" onclick="answerMC('+i+')">' + esc(c) + '</button>';
-      }).join('') +
-      '</div>';
-  } else {
-    answerHtml = '<div class="exam-open-wrap">' +
-      '<textarea class="exam-open-input" id="openAnswer" rows="4" placeholder="Bildiğin maddeleri yaz, her satıra bir madde…" onkeydown="if(event.key===\'Enter\'&&event.ctrlKey)checkOpen()"></textarea>' +
-      '<div style="margin-top:8px;display:flex;gap:8px;">' +
-      '<button class="exam-open-btn" onclick="checkOpen()">Kontrol Et</button>' +
-      '<span style="font-size:12px;color:var(--text3);align-self:center;">Ctrl+Enter ile de gönderebilirsin</span>' +
-      '</div></div>';
-  }
-
-  document.getElementById('examBody').innerHTML = metaHtml + cardHtml + answerHtml + '<div id="examFeedback"></div>';
-
-  if (q.type === 'open') {
-    setTimeout(function(){ var el=document.getElementById('openAnswer'); if(el)el.focus(); }, 100);
-  }
-}
-
-function answerMC(idx) {
-  if (examState.answered) return;
-  examState.answered = true;
-  var q = examState.questions[examState.current];
-  var chosen = q.choices[idx];
-  var isCorrect = chosen === q.correct;
-
-  q.choices.forEach(function(c, i) {
-    var btn = document.getElementById('choice-'+i);
-    btn.disabled = true;
-    if (c === q.correct) btn.classList.add('correct');
-    else if (i === idx && !isCorrect) btn.classList.add('wrong');
-  });
-
-  if (isCorrect) { examState.correct++; examState.score++; } else { examState.wrong++; }
-
-  var fb = document.getElementById('examFeedback');
-  fb.innerHTML = '<div class="exam-feedback ' + (isCorrect?'correct':'wrong') + '">' +
-    '<div class="exam-feedback-title">' + (isCorrect ? '✓ Doğru!' : '✗ Yanlış') + '</div>' +
-    (!isCorrect ? '<div>Doğru cevap: <strong>' + esc(q.correct) + '</strong></div>' : '') +
-    '</div>' + nextBtn();
-}
-
-function checkOpen() {
-  if (examState.answered) return;
-  examState.answered = true;
-  var q = examState.questions[examState.current];
-  var raw = (document.getElementById('openAnswer').value || '').trim();
-  var userAnswers = raw.split('\n').map(function(s){ return s.trim().toLowerCase(); }).filter(Boolean);
-  var correct = q.answers.map(function(a){ return a.toLowerCase(); });
-
-  var hits = correct.filter(function(a){ return userAnswers.some(function(u){ return u.length>2 && (a.includes(u)||u.includes(a)); }); });
-  var misses = q.answers.filter(function(a){ return !hits.includes(a.toLowerCase()); });
-  var ratio = hits.length / correct.length;
-
-  var cls, label;
-  if (ratio >= 0.8) { cls='correct'; label='✓ Harika!'; examState.correct++; examState.score += ratio; }
-  else if (ratio >= 0.4) { cls='partial'; label='~ Kısmen doğru'; examState.partial++; examState.score += ratio * 0.5; }
-  else { cls='wrong'; label='✗ Eksik kaldı'; examState.wrong++; }
-
-  var chipsHtml = '<div class="exam-feedback-items">' +
-    hits.map(function(h){ return '<span class="exam-feedback-chip hit">✓ ' + esc(q.answers.find(function(a){return a.toLowerCase()===h;})||h) + '</span>'; }).join('') +
-    misses.map(function(m){ return '<span class="exam-feedback-chip miss">✗ ' + esc(m) + '</span>'; }).join('') +
-    '</div>';
-
-  document.getElementById('examFeedback').innerHTML =
-    '<div class="exam-feedback ' + cls + '">' +
-    '<div class="exam-feedback-title">' + label + ' (' + hits.length + '/' + correct.length + ')</div>' +
-    chipsHtml +
-    '</div>' + nextBtn();
-}
-
-function nextBtn() {
-  var isLast = examState.current >= examState.questions.length - 1;
-  return '<button class="exam-next-btn" onclick="' + (isLast?'showExamResult()':'nextQuestion()') + '">' + (isLast?'Sonucu Gör →':'Sonraki Soru →') + '</button>';
-}
-
-function nextQuestion() {
-  examState.current++;
-  renderExamQuestion();
-}
-
-function showExamResult() {
-  var s = examState;
-  document.getElementById('examProgressFill').style.width = '100%';
-  document.getElementById('examHeaderTitle').textContent = 'Sonuç';
-  var total = s.questions.length;
-  var pct = Math.round((s.score / total) * 100);
-  var emoji = pct>=80?'🎉':pct>=50?'👍':'💪';
-
-  document.getElementById('examBody').innerHTML =
-    '<div class="exam-result">' +
-    '<div style="font-size:48px;margin-bottom:-8px;">' + emoji + '</div>' +
-    '<div class="exam-result-score">' + pct + '%</div>' +
-    '<div class="exam-result-label">' + total + ' sorudan ' + s.correct + ' tam doğru</div>' +
-    '<div class="exam-result-detail">' +
-      '<div class="exam-result-row"><span>✓ Tam doğru</span><span style="color:#27ae60;font-weight:800;">' + s.correct + '</span></div>' +
-      '<div class="exam-result-row"><span>~ Kısmen doğru</span><span style="color:#b7860b;font-weight:800;">' + s.partial + '</span></div>' +
-      '<div class="exam-result-row"><span>✗ Yanlış / Eksik</span><span style="color:var(--dis);font-weight:800;">' + s.wrong + '</span></div>' +
-      '<div class="exam-result-row"><span>Toplam soru</span><span style="font-weight:800;">' + total + '</span></div>' +
-    '</div>' +
-    '<button class="exam-result-restart" onclick="renderExamStart()">Tekrar Başlat</button>' +
-    '<button class="exam-result-back" onclick="closeExam()">Ana Ekrana Dön</button>' +
-    '</div>';
-}
 
 // ── INIT ──
 ensurePool();
