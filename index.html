@@ -422,6 +422,17 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
 
 
 
+<!-- İSTATİSTİK MODALİ -->
+<div class="overlay" id="statsOverlay" onclick="if(event.target===this)closeStatsModal()" style="z-index:300;">
+  <div class="modal" style="max-width:400px;" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-header-title">İstatistikler</span>
+      <button class="modal-close" onclick="closeStatsModal()">✕</button>
+    </div>
+    <div class="modal-body" id="statsBody"></div>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 <div class="settings-panel" id="settingsPanel">
   <div class="s-backdrop" onclick="closeSettings()"></div>
@@ -442,9 +453,9 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
         <div id="authLoggedIn" style="display:none">
           <div class="auth-user-row s-btn" style="cursor:default;">
             <img class="auth-avatar" id="authAvatar" src="" alt="">
-            <div style="display:flex;align-items:baseline;flex:1;overflow:hidden;">
+            <div style="display:flex;align-items:center;flex:1;overflow:hidden;">
               <div class="auth-name" id="authName"></div>
-              <span style="color:var(--text3);margin:0 8px;">/</span>
+              <span style="color:var(--text3);margin:0 8px;line-height:1;">/</span>
               <div class="auth-email" id="authEmail"></div>
             </div>
           </div>
@@ -453,8 +464,7 @@ mark{background:#ffeaa7;border-radius:3px;padding:0 2px;}
           <button class="s-btn danger" onclick="doSignOut()" style="border-color:#f5c6c0;"><span class="s-icon" style="background:#c0392b"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>Çıkış yap</button>
         </div>
         <div style="height:1px;background:var(--border);margin:8px 0;"></div>
-        <button class="s-btn" onclick="showStatsInSettings()" style="border-color:#a8d0ed;"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>İstatistikler</button>
-        <div id="statsBody" style="display:none;margin-bottom:5px;"></div>
+        <button class="s-btn" onclick="closeSettings();openStatsModal()" style="border-color:#a8d0ed;"><span class="s-icon" style="background:#1a6fa8"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>İstatistikler</button>
         <button class="s-btn" onclick="closeSettings();openPoolViewer()" style="border-color:#f0b27a;"><span class="s-icon" style="background:#d35400"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Madde havuzu</button>
         <button class="s-btn" onclick="exportData()" style="border-color:#a8d8d2;"><span class="s-icon" style="background:#1a7a6e"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>Dışa aktar (JSON)</button>
         <button class="s-btn" onclick="document.getElementById('importFile').click()" style="border-color:#c39bd3;"><span class="s-icon" style="background:#8e44ad"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>İçe aktar (JSON)</button>
@@ -2543,18 +2553,14 @@ function showToast(msg) {
 // ── İSTATİSTİKLER ──
 function openStatsModal() {
   renderStats();
-  openSettings();
-  var sb = document.getElementById('statsBody');
-  if (sb) sb.style.display = 'block';
+  document.getElementById('statsOverlay').style.display = 'flex';
 }
 function closeStatsModal() {
-  var sb = document.getElementById('statsBody');
-  if (sb) sb.style.display = 'none';
+  document.getElementById('statsOverlay').style.display = 'none';
 }
 function showStatsInSettings() {
-  renderStats();
-  var sb = document.getElementById('statsBody');
-  if (sb) sb.style.display = sb.style.display === 'none' ? 'block' : 'none';
+  closeSettings();
+  openStatsModal();
 }
 function renderStats() {
   var dis = localDb.disease || [];
